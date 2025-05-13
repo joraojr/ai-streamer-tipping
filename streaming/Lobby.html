@@ -1,0 +1,172 @@
+{% block styles  %}
+<link href="{% static 'sliders.css' %}" rel="stylesheet"/>
+{% endblock %}
+
+
+{{ block content }}
+<!DOCTYPE html>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<nav class="navbar fixed-top navbar-light bg-light"
+     style="justify-content: space-around;box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.125);">
+    <div class="d-flex flex-row justify-content-center align-items-center" style="width: 30%;">
+        <div class="d-flex flex-column account-balance" style="margin-right: 20px;">
+            <div class="account-balance-title dot-title">ROUND</div>
+            <div class="account-balance-figure"> {{ player.round_number }} of {{ Constants.num_rounds }}</div>
+        </div>
+        <!--<div class="d-flex flex-row justify-content-around" style="width: 70%; margin: 10px auto;">
+            <div class="d-flex flex-column">
+                <div class="dot-title">Streaming</div>
+                <div class="dot-container">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="#888888" class="bi bi-dot"
+                         viewBox="0 0 16 16">
+                        <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="d-flex flex-column">
+                <div class="dot-title" style="color: var(--bs-primary);">Tipping</div>
+                <div class="dot-container">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="var(--bs-primary)"
+                         class="bi bi-dot"
+                         viewBox="0 0 16 16">
+                        <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="d-flex flex-column">
+                <div class="dot-title">Results</div>
+                <div class="dot-container">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="#888888" class="bi bi-dot"
+                         viewBox="0 0 16 16">
+                        <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex flex-column account-balance">
+          <div class="account-balance-title dot-title">Account balance</div>
+          <div class="account-balance-figure">{{ participant.account_balance }} Points</div>
+        </div>-->
+        <!--<div style="vertical-align: middle; text-align: center; font-size: 16px;" class="dot-title">
+        </div>-->
+</nav>
+
+<br><br>
+
+<br>
+
+
+<div class="jumbotron p-3 mb-2 bg-light text-dark" style="text-align:center;" id="set_minimum">
+{{ if player.participant.role == 'streamer' }}
+<p>You are the <b>STREAMER</b>.</p>
+<p>Get ready to perform the slider task.</p>
+{{ else }}
+{{ if player.participant.leaderboard }}
+<p>You are <b>VIEWER #{{ player.participant.within_group_id }}.</b></p>
+{{ else }}
+<p>You are a <b>VIEWER</b>.</p>
+{{ endif }}
+<p>Get ready to watch the streamer perform the slider task. You are <b>not able</b> to solve the sliders.</p>
+{{ endif }}
+<p>The streaming phase will start automatically when the countdown ends.</p>
+<p>All future rounds <b>will count</b> towards your earnings.</p>
+<br><br>
+<span id="time-left"></span>
+</div>
+
+
+<br>
+
+
+{{ endblock }}
+
+{{ block scripts }}
+<script type="text/javascript">
+
+
+  // Timer
+  let customTimerEle = document.getElementById('time-left');
+
+  document.addEventListener("DOMContentLoaded", function (event) {
+      $('.otree-timer__time-left').on('update.countdown', function (event) {
+          const totalSeconds = event.offset.totalSeconds;
+          const minutes = Math.floor(totalSeconds / 60);
+          const seconds = Math.floor(totalSeconds % 60);
+
+          // Use template literals to format the time as "0:45"
+          customTimerEle.innerText = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+      });
+  });
+
+</script>
+<style media="screen">
+    .otree-timer {
+        display: none !important;
+    }
+
+    .dot-title {
+        font-size: 16px;
+        color: #888;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .dot-container {
+        text-align: center;
+    }
+
+    body {
+        padding-bottom: 100px;
+    }
+
+    .account-balance-middle {
+        color: #888;
+        font-weight: bold;
+        font-size: 14px;
+    }
+
+    .account-balance-figure {
+        color: #525252;
+        font-weight: bold;
+        font-size: 30px;
+        text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.15);
+    }
+
+    .account-balance {
+        text-align: center;
+    }
+
+    .input-group-text {
+        color: #525252;
+        font-weight: bold;
+        font-size: 20px;
+    }
+
+    .unselectable {
+        user-drag: none;
+        user-select: none;
+        -moz-user-select: none;
+        -webkit-user-drag: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+    }
+
+    #no_minimum {
+        margin-left: 20px;
+    }
+
+    #set_minimum {
+        margin: 30px 0px;
+    }
+
+    #time-left {
+        color: #525252;
+        font-weight: bold;
+        font-size: 30px;
+        text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.15);
+    }
+
+</style>
+{{ endblock }}

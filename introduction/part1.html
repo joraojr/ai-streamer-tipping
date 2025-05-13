@@ -1,0 +1,49 @@
+{{ block content }}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Part 1</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+</head>
+
+<div class="jumbotron p-3 mb-2 bg-light text-dark" style="text-align:justify">
+    <br>
+
+    <p>
+        This experiment consists of three parts.
+    </p>
+    <p>
+        In Part One, the experiment is explained. You will be asked to fill in
+        comprehension questions after the explanation.
+    </p>
+    <p>
+        In Part Two, you will interact in a group with other participants. This part will start automatically as soon as
+        all participants have finished Part One.
+    </p>
+    <p>
+        In Part Three, we will ask you to fill out a survey.
+    </p>
+    <p>
+        Please click "Next" to start with Part One.
+    </p>
+
+
+</div>
+
+<button class="otree-btn-next btn btn-primary" style="float: right;">Next</button>
+
+<style type="text/css">
+    body {
+        padding-bottom: 50px;
+    }
+
+    .otree-timer {
+        display: none !important;
+    }
+</style>
+
+{{ endblock }}

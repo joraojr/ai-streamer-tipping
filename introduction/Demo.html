@@ -1,0 +1,176 @@
+{{ block content }}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Sliders</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link href="{% static 'sliders.css' %}" rel="stylesheet"/>
+    <script src="{{ static 'sliders.js' }}"></script>
+
+</head>
+<nav class="navbar fixed-top navbar-light bg-light"
+     style="justify-content: space-around; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.125); flex-wrap: wrap;">
+    <!-- First Row -->
+    <div class="d-flex flex-row justify-content-around" style="width: 100%;padding-left: 45px">
+        <h1>DEMO ROUND</h1>
+    </div>
+    <!-- Second Row-->
+    <div class="d-flex flex-row justify-content-center align-items-center" style="width: 100%;">
+        <div class="d-flex flex-column account-balance" style="margin-right: 200px;">
+            <div class="account-balance-title dot-title">ROUND</div>
+            <div class="account-balance-figure"> {{ player.round_number }} of 10</div>
+        </div>
+        <div class="d-flex flex-column account-balance" style="margin-right: 200px;">
+            <div class="account-balance-title dot-title">CURRENT SCORE</div>
+            <div class="account-balance-figure"><span class="solved_so_far">0</span></div>
+        </div>
+        <div class="account-balance-figure"><span id="time-left"></span></div>
+    </div>
+</nav>
+
+<!--<h3>Contribution</h3>-->
+
+<div style="padding-top: 100px;">
+    <p>Drag the blue circle along the slider to the middle <b>until they turn green</b> to increase your score.
+        Press the Next button when you are ready to proceed to Part 2.
+
+    </p>
+</div>
+<progress id="progress-bar" max="{{ params.num_sliders }}" value="0"></progress>
+
+<canvas id="canvas" class="m-2"></canvas>
+
+<div class="d-flex flex-row align-items-start" style='padding-top: 50px;'>
+    <input type="hidden" id="no_display_balance" value="180">
+</div>
+
+
+<button class="otree-btn-next btn btn-primary" style="float: right; width: 60px;">Next</button>
+
+<br>
+
+{{ endblock }}
+
+{{ block scripts }}
+<script type="text/javascript">
+    $(document).ready(function () {
+        const progress_bar = document.getElementById('progress-bar');
+        const image = document.getElementById('target_image');
+
+        $(document).mouseup(function () {
+            updateImageBlur();
+        });
+
+        setInterval(updateImageBlur, 1000);
+
+        // Function to be executed after the timeout
+        function timeoutFunction() {
+            // Trigger the click event on the button
+            $(".otree-btn-next").trigger("click");
+        }
+
+        if ($("#player_role").val() == "viewer") {
+            setInterval(function () {
+                liveSend({type: 'load'});
+            }, 1500);
+        }
+
+        var timeoutID = setTimeout(timeoutFunction, 120000); // 120 seconds = 120,000 milliseconds
+
+
+        function updateImageBlur() {
+            var completedSliders = progress_bar.value;
+            $(".solved_so_far").html(completedSliders);
+        }
+
+    });
+
+    // Timer
+    let customTimerEle = document.getElementById('time-left');
+
+    document.addEventListener("DOMContentLoaded", function (event) {
+        $('.otree-timer__time-left').on('update.countdown', function (event) {
+            const totalSeconds = event.offset.totalSeconds;
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = Math.floor(totalSeconds % 60);
+
+            // Use template literals to format the time as "0:45"
+            customTimerEle.innerText = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        });
+    });
+
+
+</script>
+<style media="screen">
+    .otree-timer {
+        display: none;
+    }
+
+    .otree-body {
+        max-width: 1200px;
+    }
+
+    .dot-title {
+        font-size: 16px;
+        color: #888;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .dot-container {
+        text-align: center;
+    }
+
+    body {
+        padding-bottom: 100px;
+    }
+
+    .account-balance-middle {
+        color: #888;
+        font-weight: bold;
+        font-size: 14px;
+    }
+
+    .account-balance-figure {
+        color: #525252;
+        font-weight: bold;
+        font-size: 30px;
+        text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.15);
+    }
+
+    .account-balance {
+        text-align: center;
+    }
+
+    .unselectable {
+        user-drag: none;
+        user-select: none;
+        -moz-user-select: none;
+        -webkit-user-drag: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+    }
+
+    #picture {
+        right: 50px;
+        position: fixed;
+        width: 400px;
+        padding: 10px;
+    }
+
+    h1 {
+        color: red;
+        text-transform: uppercase;
+    }
+
+    .page-header {
+        padding-top: 60px;
+    }
+</style>
+{{ if DEBUG }}
+<script src="{{ static 'sliders_cheating.js' }}"></script>
+{{ endif }}
+{{ endblock }}

@@ -1,0 +1,237 @@
+
+
+
+
+{{ block content }}
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-latest.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-rating-input/0.4.0/bootstrap-rating-input.js" integrity="sha512-iPM8dV0Jp7FajUlVYnbOtP8ofzjxndWSjgPtd3HCyXfJnlaAbz9bi9RsCsESm4gwB5AGK79yy402TG/Jf40FGA==" crossorigin="anonymous"></script>
+<link rel="stylesheet" type="text/css" href="{{ static 'global/forms.css' }}">
+
+    <div class="jumbotron p-3 mb-2 bg-light text-dark" style="text-align:center; width: 500px; margin: 0px auto;">
+
+      <div class="title" id="title1">1.
+{{ if participant.treatment == "human"}}
+{{ if participant.role == 'agent' }}
+How would you assess Player B’s decision to force you to place a minimum number of {{ player.participant.control_intensity }} sliders to earn points?
+{{ else }}
+How would you assess your (or any Player B’s) decision to force Player A to place a minimum number of {{ player.participant.control_intensity }} sliders to earn points?
+{{ endif }}
+{{ else }}
+{{ if participant.role == 'agent' }}
+How would you assess the algorithm’s decision to force you to place a minimum number of {{ player.participant.control_intensity }} sliders to earn points?
+{{ else }}
+How would you assess the algorithm’s decision to force Player A to place a minimum number of {{ player.participant.control_intensity }} sliders to earn points?
+{{ endif }}
+{{ endif }}
+</div>
+
+<table class="table">
+    <col width="200px" />
+  <thead>
+    <tr>
+        <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+
+
+<tr>
+      <td class="text-align-center">
+            <label for="" class="pull-left">Unfair</label>
+            <label for="" class="pull-right">Fair</label>
+            <input type="range" name="item2A_fair" value="None" step="1" style="width:100%;" min="0" max="100" class="form-control form-range">
+            <span id="feedback_item2A_fair" style="font-size:14px;"><br></span>
+      </td>
+
+
+    </tr>
+
+
+<tr>
+      <td class="text-align-center">
+            <label for="" class="pull-left">Unkind</label>
+            <label for="" class="pull-right">Kind</label>
+            <input type="range" name="item2A_kind" value="None" step="1" style="width:100%;" min="0" max="100" class="form-control form-range">
+            <span id="feedback_item2A_kind" style="font-size:14px;"><br></span>
+      </td>
+    </tr>
+
+
+
+    <!-- <tr>
+          <td class="text-align-center">
+                <label for="" class="pull-left">Demotivating</label>
+                <label for="" class="pull-right">Motivating</label>
+                <input type="range" name="item2A_motivating" value="None" step="1" style="width:100%;" min="0" max="100" class="form-control form-range">
+                <p id="feedback_item2A_motivating" style="font-size:14px;"><br></p>
+          </td>
+
+
+        </tr> -->
+
+<!--
+    <tr>
+          <td class="text-align-center">
+                <label for="" class="pull-left">Unjustified</label>
+                <label for="" class="pull-right">Justified</label>
+                <input type="range" name="item2A_justified" value="None" step="1" style="width:100%;" min="0" max="100" class="form-control form-range">
+                <p id="feedback_item2A_justified" style="font-size:14px;"><br></p>
+          </td>
+        </tr>
+
+        <tr>
+              <td class="text-align-center">
+                    <label for="" class="pull-left">Intransparent</label>
+                    <label for="" class="pull-right">Transparent</label>
+                    <input type="range" name="item2A_transparent" value="None" step="1" style="width:100%;" min="0" max="100" class="form-control form-range">
+                    <p id="feedback_item2A_tranparent" style="font-size:14px;"><br></p>
+              </td>
+
+
+            </tr>
+
+
+
+        <tr>
+              <td class="text-align-center">
+                    <label for="" class="pull-left">Distrusting</label>
+                    <label for="" class="pull-right">Trusting</label>
+                    <input type="range" name="item2A_trusting" value="None" step="1" style="width:100%;" min="0" max="100" class="form-control form-range">
+                    <p id="feedback_item2A_trusting" style="font-size:14px;"><br></p>
+              </td>
+            </tr> -->
+
+            <tr>
+                  <td class="text-align-center">
+                        <label for="" class="pull-left">Malevolent</label>
+                        <label for="" class="pull-right">Benevolent</label>
+                        <input type="range" name="item2A_benevolent" value="None" step="1" style="width:100%;" min="0" max="100" class="form-control form-range">
+                        <span id="feedback_item2A_benevolent" style="font-size:14px;"><br></span>
+                  </td>
+
+
+                </tr>
+
+
+            <tr>
+                  <td class="text-align-center">
+                        <label for="" class="pull-left">Ungenerous</label>
+                        <label for="" class="pull-right">Generous</label>
+                        <input type="range" name="item2A_generous" value="None" step="1" style="width:100%;" min="0" max="100" class="form-control form-range">
+                        <span id="feedback_item2A_generous" style="font-size:14px;"><br></span>
+                  </td>
+                </tr>
+  </tbody>
+</table>
+
+
+<button class="otree-btn-next btn btn-primary" style="float: right;">Next</button>
+<br><br>
+
+</div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript">
+
+        $(document).ready(function () {
+      $('input[type=range]').on('input change', function () {
+            $(this).addClass('myclass');
+            $('.otree-btn-next').prop('disabled', false);
+        });
+      $('input[type=range]').on('input', function() {
+          $(this).next().html('.');
+      });
+
+      $('input[type=range]').on("click",function() {
+                    $(this).parent().css("background-color","#f8f9fa");
+            });
+
+      $('.otree-form').on('submit',function(event){
+        event.preventDefault(); // Preventing from the form to be exectued
+        var check_ranges = true;
+        $("input[type=range]").next().each(function(index,element) { // Checking
+          if($(element).html() == '<br>') {
+            check_ranges = false;
+            $(this).parent().css("background-color","#FFB6C1");
+          }
+        });
+
+        if(check_ranges) {
+          event.currentTarget.submit(); // If no error (everything filled), the form submit is allowed to proceed to the server
+        } else {
+          alert("Please answer all points."); // Showing an alert if not
+        }
+
+      });
+
+      document.addEventListener("DOMContentLoaded", function() {
+
+    const observerOptions = {
+        root: null,
+        rootMargin: "0px",
+        threshold: 1.0
+    };
+
+    function callback(entries, observer) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // If the table is fully visible in the viewport, set the title to sticky
+                entry.target.previousElementSibling.style.position = 'sticky';
+            } else {
+                // If the table is not fully visible, set the title to absolute positioning at the bottom of its container
+                entry.target.previousElementSibling.style.position = 'absolute';
+                entry.target.previousElementSibling.style.bottom = '0';
+            }
+        });
+    }
+
+    const observer = new IntersectionObserver(callback, observerOptions);
+
+    // Start observing each table
+    document.querySelectorAll("table").forEach(table => {
+        observer.observe(table);
+    });
+
+});
+
+
+    });
+
+</script>
+
+
+<style type="text/css">
+    .otree-body {
+        max-width: 900px !important;
+    }
+
+    label {
+        font-weight: bold !important;
+    }
+
+    td p {
+        color: transparent;
+    }
+
+    input {
+      max-width: none !important;
+    }
+
+
+.title {
+    background: #f8f9fa;
+    position: -webkit-sticky; /* for Safari */
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: left;
+    padding: 20px;
+}
+
+</style>
+{{ endblock }}

@@ -1,0 +1,121 @@
+{{ block content }}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link href="{% static 'sliders.css' %}" rel="stylesheet"/>
+
+</head>
+
+<div class="d-flex flex-row justify-content-around" style="width: 50%; margin: 20px auto;">
+    <div class="d-flex flex-column">
+        <div class="dot-title" style="color: var(--bs-primary);">Streaming</div>
+        <div class="dot-container">
+            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="var(--bs-primary)" class="bi bi-dot"
+                 viewBox="0 0 16 16">
+                <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
+            </svg>
+        </div>
+    </div>
+    <div class="d-flex flex-column">
+        <div class="dot-title">Tipping</div>
+        <div class="dot-container">
+            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="#888888" class="bi bi-dot"
+                 viewBox="0 0 16 16">
+                <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
+            </svg>
+        </div>
+    </div>
+    <div class="d-flex flex-column">
+        <div class="dot-title">Results</div>
+        <div class="dot-container">
+            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="#888888" class="bi bi-dot"
+                 viewBox="0 0 16 16">
+                <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
+            </svg>
+        </div>
+    </div>
+</div>
+
+<h2>Phase 1: Streaming Phase</h2>
+
+
+<div class="jumbotron p-3 mb-2 bg-light text-dark text-center">
+    <div style="text-align: left;">
+        <h3>
+            Instructions
+        </h3>
+
+        <p>
+            At the beginning of each round, the Streamer perform a slider task, where they need to solve as
+            many sliders as possible within the time-limit. To solve a slider, the Streamer must use the mouse to drag
+            the blue circle to the middle of each slider <b>until it turns green</b>. The blue circle <b>MUST TURN
+            GREEN</b> in order for the slider to count. If the circle remains blue, the slider does not count.
+        </p>
+    </div>
+
+    <div class="mx-auto">
+        <img src="{{ static 'images/slider_task_video.gif'}}" alt=""
+             style="border: 1px solid #ddd; display: block; margin: 0 auto;">
+        <p><i>Slider task demo</i></p>
+    </div>
+</div>
+
+
+<div class="row" style="padding-bottom: 30px; text-align: justify;">
+    <div class="col-sm-6" style="width: 100%;">
+        <div class="card">
+            <div class="card-header">
+                <h4>Streamer</h4>
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    For each round, the Streamer has <b>45 seconds</b> to solve up to 48 sliders. The number of solved
+                    sliders are displayed as the Current Score on the top of the screen.
+                </p>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6" style="width: 100%; margin-top: 20px;">
+        <div class="card">
+            <div class="card-header">
+                <h4>Viewers</h4>
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    Viewers are <b><u>not able</u></b> to solve the sliders but instead shown a live-stream of the
+                    Streamer's performance on their screens. The Streamer and the Viewers cannot communicate.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<button class="otree-btn-next btn btn-primary" style="float: right;">Next</button>
+<style type="text/css">
+    .dot-title {
+        font-size: 16px;
+        color: #888;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .dot-container {
+        text-align: center;
+    }
+
+    body {
+        padding-bottom: 100px;
+    }
+
+    .otree-timer {
+        display: none !important;
+    }
+</style>
+
+{{ endblock }}

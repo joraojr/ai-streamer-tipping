@@ -1,0 +1,47 @@
+{{ block content }}
+<link rel="stylesheet" type="text/css" href="{{ static 'global/forms.css' }}">
+
+    <div class="jumbotron p-3 mb-2 bg-light text-dark" style="text-align:center">
+    <b>
+  How much do you agree with the below statement?
+  </b>
+
+
+<table class="table">
+    <thead>
+      <tr>
+        <th>Statement</th>
+        <th>Disagree strongly</th>
+        <th>Disagree moderately</th>
+        <th>Disagree a little</th>
+        <th>Neither agree nor disagree</th>
+        <th>Agree a little</th>
+        <th>Agree moderately</th>
+        <th>Agree strongly</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    {{ for field in form }}
+        <tr>
+            <th>{{ field.label }}</th>
+            {{ for choice in field }}
+                <td>{{ choice }}</td>
+            {{ endfor }}
+        </tr>
+    {{ endfor }}
+    </tbody>
+</table>
+
+    <hr>
+    {% next_button  %}
+
+
+</div>
+
+<style type="text/css">
+    .otree-body {
+        max-width: 1200px !important;
+    }
+</style>
+{{ endblock }}

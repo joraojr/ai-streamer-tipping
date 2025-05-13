@@ -1,0 +1,157 @@
+{{ block content }}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+</head>
+
+<div class="d-flex flex-row justify-content-around" style="width: 50%; margin: 20px auto;">
+    <div class="d-flex flex-column">
+        <div class="dot-title">Streaming</div>
+        <div class="dot-container">
+            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="#888888" class="bi bi-dot"
+                 viewBox="0 0 16 16">
+                <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
+            </svg>
+        </div>
+    </div>
+    <div class="d-flex flex-column">
+        <div class="dot-title">Tipping</div>
+        <div class="dot-container">
+            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="#888888" class="bi bi-dot"
+                 viewBox="0 0 16 16">
+                <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
+            </svg>
+        </div>
+    </div>
+    <div class="d-flex flex-column">
+        <div class="dot-title" style="color: var(--bs-primary);">Results</div>
+        <div class="dot-container">
+            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="var(--bs-primary)" class="bi bi-dot"
+                 viewBox="0 0 16 16">
+                <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
+            </svg>
+        </div>
+    </div>
+</div>
+
+<h2>Phase 3: Results Phase</h2>
+
+<div class="jumbotron p-3 mb-2 bg-light text-dark" style="text-align:left; margin-bottom: 30px !important;">
+    <h3>
+        Instructions
+    </h3>
+    <p>
+        After the Tipping Phase, the Streamer and the Viewers receive a round summary.
+    </p>
+</div>
+
+<div class="row" style="padding-bottom: 30px; text-align: justify;">
+    <div class="col-sm-6" style="width: 100%;">
+        <div class="card">
+            <div class="card-header">
+                <h4>Streamer</h4>
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                {{ if player.participant.leaderboard }}
+                                The Streamer sees a leaderboard with the top {{ Constants.leaderboard_topn }} tippers for the round.<br>
+                    The Streamer also sees the score for the number of correctly solved sliders, the round earnings
+                    based on their performance, the total amount of tips received and the total round earnings including
+                    tips.
+                {{ else }}
+                    The Streamer sees the score for the number of correctly solved sliders, the round earnings
+                    based on their performance, the total amount of tips received and the total round earnings including
+                    tips.
+                {{ endif }}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6" style="width: 100%; margin-top: 20px;">
+        <div class="card">
+            <div class="card-header">
+                <h4>Viewer</h4>
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                                {{ if player.participant.leaderboard }}
+                    Viewers see a leaderboard with the top {{ Constants.leaderboard_topn }} tippers for the round.<br>
+                    Viewers also see the score for the number of correctly solved sliders, the round earnings
+                    based on the Streamer's performance, how much they tipped individually and the remaining
+                    earnings after tip.
+                {{ else }}
+                    Viewers see the score for the number of correctly solved sliders, the round earnings
+                    based on the Streamer's performance, how much they tipped individually and the remaining
+                    earnings after tip.
+                {{ endif }}
+
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="jumbotron p-3 mb-2 bg-light text-dark" style="text-align:left; margin-bottom: 30px !important;">
+
+    <p>
+        After the Results Phase, a new round begins for a total of <b>10 rounds</b>. After the 10 rounds, <b>5
+        rounds</b>
+        are drawn randomly and your payout for this experiment will equal the <b>earnings from those rounds</b> and an
+        <b>additional 2.50 €</b> show-up fee.
+    </p>
+</div>
+
+<!--<div class="card" style="margin-bottom: 30px;">
+    <div class="card-header">
+    <h4>Your payoff at the end of the round</h4>
+  </div>
+      <div class="card-body">
+        <p class="card-text">
+          You have contributed £X to the public good. These pounds will be deducted from your account balance. <br><br>The other participants in your group contributed a total of £Y to the public good.
+Since you also benefit from the contributions to the public good, you will receive half of their contributions credited as payoff.
+        </p>
+      </div>
+    </div>-->
+
+<!--<div class="card" style="margin-bottom: 50px;">
+<div class="card-header">
+<h4>Questionnaire</h4>
+</div>
+  <div class="card-body">
+    <p class="card-text">
+      At the end of the 4 rounds, you will be asked to answer a few questionnaires.
+    </p>
+  </div>
+</div>-->
+
+
+<button class="otree-btn-next btn btn-primary" style="float: right;">Next</button>
+
+<style type="text/css">
+    .dot-title {
+        font-size: 16px;
+        color: #888;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .dot-container {
+        text-align: center;
+    }
+
+    body {
+        padding-bottom: 100px;
+    }
+
+    .otree-timer {
+        display: none !important;
+    }
+</style>
+
+{{ endblock }}

@@ -1,0 +1,79 @@
+{% block styles  %}
+    <link href="{% static 'sliders.css' %}" rel="stylesheet"/>
+{% endblock %}
+
+
+{{ block content }}
+<nav class="navbar fixed-top navbar-light bg-light" style="justify-content: space-around;">
+  <!--<div class="navbar-brand dot-title">Part 2</div>
+  <div class="d-flex flex-column account-balance">
+    <div class="account-balance-title dot-title">Account balance</div>
+    <div class="account-balance-figure">{{ participant.account_balance }} Points</div>
+  </div>
+  <!--<div style="vertical-align: middle; text-align: center; font-size: 16px;" class="dot-title">
+  </div>-->
+</nav>
+
+<br><br>
+
+<p>The following rounds were drawn randomly: <ul>{{ for item in player.participant.drawn_rounds }} <li>Round {{ item }}</li> {{ endfor }}</ul></p>
+<p>Your earnings in these rounds were <ul>{{ for item in player.participant.drawn_earnings }} <li>{{ item }} €</li> {{ endfor }}</ul></p>
+<p>This means, your total payout for the experiment with the additional 2.50 € show-up fee will be:</p>
+<p style="font-weight: bold; font-size: 30px; text-align: center;"><b>{{ total_payoff }} €</b></p>
+
+<button class="otree-btn-next btn btn-primary" style="float: right;">Next</button>
+<br>
+
+
+{{ endblock }}
+
+{{ block scripts }}
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<style media="screen">
+.otree-timer {
+  display: none !important;
+}
+
+.dot-title {
+  font-size: 16px;
+  color: #888;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.dot-container {
+  text-align: center;
+}
+
+body {
+  padding-bottom: 100px;
+}
+
+.account-balance-middle {
+  color: #888;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.account-balance-figure {
+  color: #000;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.account-balance {
+  text-align: center;
+}
+
+.unselectable {
+  user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+</style>
+{{ endblock }}

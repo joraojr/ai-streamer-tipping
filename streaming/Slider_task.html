@@ -1,0 +1,169 @@
+{{ block content }}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Introduction</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link href="{% static 'sliders.css' %}" rel="stylesheet"/>
+</head>
+<!--<nav class="navbar fixed-top navbar-light bg-light" style="justify-content: space-around;">
+    <div class="navbar-brand dot-title">Part 1<br>Round 1 of {{ Constants.num_rounds }}</div>
+    <p><b>You have correctly placed <span class="solved_so_far">0</span> sliders so far.</b></p>
+</nav>-->
+
+<nav class="navbar fixed-top navbar-light bg-light"
+     style="justify-content: space-around; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.125); flex-wrap: wrap;">
+    <!-- First Row -->
+    <div class="d-flex flex-row justify-content-around" style="width: 100%;padding-left: 30px">
+        {{ if participant.role == 'streamer' }}
+        <h1>You are live</h1>
+        {{ else }}
+        <h1>The Streamer is live</h1>
+        {{ endif }}
+
+
+    </div>
+    <!-- Second Row-->
+    <div class="d-flex flex-row justify-content-center align-items-center" style="width: 100%;">
+        <div class="d-flex flex-column account-balance" style="margin-right: 200px;">
+            <div class="account-balance-title dot-title">ROUND</div>
+            <div class="account-balance-figure"> {{ player.round_number }} of {{ Constants.num_rounds }}</div>
+        </div>
+        <div class="d-flex flex-column account-balance" style="margin-right: 200px;">
+            <div class="account-balance-title dot-title">CURRENT SCORE</div>
+            <div class="account-balance-figure"><span class="solved_so_far">0</span></div>
+        </div>
+        <div class="account-balance-figure"><span id="time-left"></span></div>
+    </div>
+</nav>
+
+
+<!--<h3>-->
+<!--    Slider task-->
+<!--</h3>-->
+<!--<div class="jumbotron p-3 mb-2 bg-light text-dark" style="text-align:justify">
+  <p><b>You have solved <span class="solved_so_far">0</span> sliders so far.</b></p>
+
+</div>-->
+<progress id="progress-bar" max="{{ params.num_sliders }}" value="0"></progress>
+<canvas id="canvas" class="m-2 {{ if player.participant.role == 'viewer' }} unselectable {{ endif }}"></canvas>
+<div class="jumbotron p-3 mb-2 bg-light text-dark" style="text-align:justify">
+    <input type="hidden" name="player_role" id="player_role" value="{{ player.participant.role }}">
+
+</div>
+
+<!--<button class="otree-btn-next btn btn-primary" style="float: right;">Next</button>-->
+<script src="{{ static 'sliders/sliders.js' }}"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        const progress_bar = document.getElementById('progress-bar');
+
+        $(document).mouseup(function () {
+            updateImageBlur();
+        });
+
+        setInterval(updateImageBlur, 1000);
+
+        // Function to be executed after the timeout
+        function timeoutFunction() {
+            // Trigger the click event on the button
+            $(".otree-btn-next").trigger("click");
+        }
+
+        if ($("#player_role").val() == "viewer") {
+            setInterval(function () {
+                liveSend({type: 'load'});
+            }, 1500);
+        }
+
+        var timeoutID = setTimeout(timeoutFunction, 45000); // 120 seconds = 120,000 milliseconds
+
+
+        function updateImageBlur() {
+            var completedSliders = progress_bar.value;
+            $(".solved_so_far").html(completedSliders);
+        }
+
+    });
+
+    // Timer
+    let customTimerEle = document.getElementById('time-left');
+
+    document.addEventListener("DOMContentLoaded", function (event) {
+        $('.otree-timer__time-left').on('update.countdown', function (event) {
+            const totalSeconds = event.offset.totalSeconds;
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = Math.floor(totalSeconds % 60);
+
+            // Use template literals to format the time as "0:45"
+            customTimerEle.innerText = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        });
+    });
+
+
+</script>
+<style type="text/css">
+    body {
+        padding-bottom: 50px;
+    }
+
+    .otree-body {
+        max-width: 1200px;
+    }
+
+    .otree-timer {
+        display: none;
+    }
+
+    .account-balance-middle {
+        color: #888;
+        font-weight: bold;
+        font-size: 14px;
+    }
+
+    .account-balance-figure {
+        color: #525252;
+        font-weight: bold;
+        font-size: 30px;
+        text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.15);
+    }
+
+    .account-balance {
+        text-align: center;
+    }
+
+    .dot-title {
+        font-size: 16px;
+        color: #888;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .dot-container {
+        text-align: center;
+    }
+
+
+    .unselectable {
+        user-drag: none;
+        user-select: none;
+        -moz-user-select: none;
+        -webkit-user-drag: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+    }
+
+    h1 {
+        color: red;
+        text-transform: uppercase;
+    }
+
+    .page-header {
+        padding-top: 130px;
+    }
+</style>
+
+{{ endblock }}

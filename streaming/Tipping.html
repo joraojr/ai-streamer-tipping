@@ -1,0 +1,204 @@
+{% block styles  %}
+<link href="{% static 'sliders.css' %}" rel="stylesheet"/>
+{% endblock %}
+
+
+{{ block content }}
+<!DOCTYPE html>
+
+
+<nav class="navbar fixed-top navbar-light bg-light"
+     style="justify-content: space-around;box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.125);">
+    <div class="d-flex flex-row justify-content-center align-items-center" style="width: 30%;">
+        <div class="d-flex flex-column account-balance" style="margin-right: 20px;">
+            <div class="account-balance-title dot-title">ROUND</div>
+            <div class="account-balance-figure"> {{ player.round_number }} of {{ Constants.num_rounds }}</div>
+        </div>
+        <div class="d-flex flex-row justify-content-around" style="width: 70%; margin: 10px auto;">
+            <div class="d-flex flex-column">
+                <div class="dot-title">Streaming</div>
+                <div class="dot-container">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="#888888" class="bi bi-dot"
+                         viewBox="0 0 16 16">
+                        <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="d-flex flex-column">
+                <div class="dot-title" style="color: var(--bs-primary);">Tipping</div>
+                <div class="dot-container">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="var(--bs-primary)"
+                         class="bi bi-dot"
+                         viewBox="0 0 16 16">
+                        <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="d-flex flex-column">
+                <div class="dot-title">Results</div>
+                <div class="dot-container">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="#888888" class="bi bi-dot"
+                         viewBox="0 0 16 16">
+                        <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+        <!--<div class="d-flex flex-column account-balance">
+          <div class="account-balance-title dot-title">Account balance</div>
+          <div class="account-balance-figure">{{ participant.account_balance }} Points</div>
+        </div>-->
+        <!--<div style="vertical-align: middle; text-align: center; font-size: 16px;" class="dot-title">
+        </div>-->
+</nav>
+
+<br><br>
+
+<br>
+
+<div class="jumbotron p-3 mb-2 bg-light text-dark" style="text-align:justify;">
+
+    <p>The Streamer scored a total of <b> {{ player.group.num_correct }} </b> sliders in this round.</p>
+    <p>This translates to round earnings of <b> {{ maxtip }} €</b>.</p>
+    <p>You can tip up to <b> {{ maxtip }} €</b>.</p>
+    <p>Please enter the desired tip amount and press Next when you are ready.</p>
+</div>
+
+{{ if treatment_text != '' }}
+<div class="jumbotron p-3 mb-2 bg-light text-dark" style="text-align:center;" id="set_minimum">
+{{ treatment_text }}
+</div>
+{{ endif }}
+
+<div class="jumbotron p-3 mb-2 bg-light text-dark d-flex justify-content-center" style="text-align:justify;"
+     id="set_minimum">
+    <div class="input-group flex-nowrap" id="minimum_input">
+        <span class="input-group-text" id="addon-wrapping">Tip Amount</span>
+        <input type="text" class="form-control" placeholder="" name="tip" id="tip"
+               onkeypress="return isNumberKey(event)" aria-describedby="addon-wrapping">
+        <span class="input-group-text" id="addon-wrapping2">€</span>
+    </div>
+</div>
+
+<input type="hidden" name="maxtip" id="maxtip" value="{{ maxtip }}">
+<button class="otree-btn-next btn btn-primary" style="float: right;" disabled>Next</button>
+<br>
+
+
+{{ endblock }}
+
+{{ block scripts }}
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+        // Function to validate the input and enable/disable the button
+        function validateInput(input_arg) {
+            const inputValue = parseFloat(input_arg);
+            const isValidInput = !isNaN(inputValue) && inputValue >= 0 && inputValue <= parseFloat($("#maxtip").val());
+
+            if (isValidInput) {
+                $(".otree-btn-next").prop("disabled", false);
+            } else {
+                $(".otree-btn-next").prop("disabled", true);
+            }
+        }
+
+// Call the validateInput function when the input field changes
+        $("#tip").on("input", function () {
+            validateInput($("#tip").val());
+        });
+
+
+// Call the validateInput function on page load
+        validateInput(888);
+
+
+    });
+
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+
+        // Allow decimal point (.) and numbers 0-9
+        if ((charCode !== 46 && charCode < 48) || (charCode > 57)) {
+            return false;
+        }
+
+        // Ensure only one decimal point is allowed
+        if (charCode === 46 && evt.target.value.indexOf('.') !== -1) {
+            return false;
+        }
+
+        // Ensure a maximum of two decimal places
+        if (evt.target.value.indexOf('.') !== -1 && evt.target.value.split('.')[1].length >= 2) {
+            return false;
+        }
+
+        return true;
+    }
+
+</script>
+<style media="screen">
+    .otree-timer {
+        display: none !important;
+    }
+
+    .dot-title {
+        font-size: 16px;
+        color: #888;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .dot-container {
+        text-align: center;
+    }
+
+    body {
+        padding-bottom: 100px;
+    }
+
+    .account-balance-middle {
+        color: #888;
+        font-weight: bold;
+        font-size: 14px;
+    }
+
+    .account-balance-figure {
+        color: #525252;
+        font-weight: bold;
+        font-size: 30px;
+        text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.15);
+    }
+
+    .account-balance {
+        text-align: center;
+    }
+
+    .input-group-text {
+        color: #525252;
+        font-weight: bold;
+        font-size: 20px;
+    }
+
+    .unselectable {
+        user-drag: none;
+        user-select: none;
+        -moz-user-select: none;
+        -webkit-user-drag: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+    }
+
+    #no_minimum {
+        margin-left: 20px;
+    }
+
+    #set_minimum {
+        margin: 30px 0px;
+    }
+
+</style>
+{{ endblock }}

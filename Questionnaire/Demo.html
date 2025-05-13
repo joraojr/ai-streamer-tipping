@@ -1,0 +1,46 @@
+{{ block content }}
+<link rel="stylesheet" type="text/css" href="{{ static 'global/forms.css' }}">
+
+    <div class="jumbotron p-3 mb-2 bg-light text-dark" style="text-align:center">
+    <b>
+
+    Please answer the following questions.
+
+    </b>
+    <br><br>
+    {{ form.gender.label }}
+    {{ form.gender }}
+    <br><br>
+    {{ form.age.label }}
+    {{ form.age }}
+<br><br>
+{{ form.subject.label }}
+{{ form.subject }}
+<br><br>
+{{ form.religion.label }}
+{{ form.religion }}
+<br><br>
+{{ form.volunteer.label }}
+{{ form.volunteer }}
+<br><br>
+    <hr>
+    {% next_button  %}
+
+
+</div>
+
+<style type="text/css">
+    .otree-body {
+        max-width: 600px !important;
+    }
+
+    select {
+      width: 100% !important;
+    }
+
+    input {
+      max-width: 600px !important;
+    }
+</style>
+
+{{ endblock }}

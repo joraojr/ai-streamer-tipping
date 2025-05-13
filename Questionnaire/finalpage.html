@@ -1,0 +1,55 @@
+
+{{ block content }}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Final page</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+</head>
+<input type="hidden" id="additional_info" value="{{ masked_payment }}">
+  <h2>Final page - Thank you!</h2>
+<br><br>
+    <div class="jumbotron p-3 mb-2 bg-light text-dark" style="text-align:left">
+
+ <br>
+<p>
+
+You have completed experiment. This concludes the study.<br><br>
+Your earnings are {{ player.participant.account_balance }} € from the 5 randomly chosen rounds.<br>
+Together with the 2.5 € show-up fee, this is {{ total_with_showup }} €.<br><br>
+<b>Please wait, you will be automatically redirected to enter your payment information. </b>
+  </p>
+
+
+</div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    var additional_info = $('#additional_info').val();
+    window.setTimeout(function() {
+        window.location.href = 'https://soscisurvey.wu.ac.at/livestreaming/?ID=' + additional_info;
+    }, 20000);});
+
+</script>
+
+<style type="text/css">
+  body {
+    padding-bottom: 50px;
+  }
+
+  .otree-timer {
+  display: none !important;
+}
+
+.image_sources {
+  margin-top: 50px;
+  font-size: 14px;
+  color: #aaa;
+}
+</style>
+
+{{ endblock }}

@@ -1,0 +1,47 @@
+{{ block content }}
+<link rel="stylesheet" type="text/css" href="{{ static 'global/forms.css' }}">
+
+    <div class="jumbotron p-3 mb-2 bg-light text-dark" style="text-align:center">
+    <b>
+Here we briefly describe some people. Please read each description and think about how much they are or are not like you. <br>Select the answers that indicate how much these people in the description are like you.
+    </b>
+
+
+<table class="table">
+    <thead>
+      <tr>
+        <th>Statement</th>
+        <th>Not like me at all</th>
+        <th>Not like me</th>
+        <th>A little like me</th>
+        <th>Somewhat like me</th>
+        <th>Like me</th>
+        <th>Very much like me</th>
+
+    </tr>
+    </thead>
+
+    <tbody>
+    {{ for field in form }}
+        <tr>
+            <td style='width: 40%; text-align: justify;'>{{ field.label }}</td>
+            {{ for choice in field }}
+                <td>{{ choice }}</td>
+            {{ endfor }}
+        </tr>
+    {{ endfor }}
+    </tbody>
+</table>
+
+    <hr>
+    {% next_button  %}
+
+
+</div>
+
+<style type="text/css">
+    .otree-body {
+        max-width: 1200px !important;
+    }
+</style>
+{{ endblock }}

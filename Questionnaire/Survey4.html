@@ -1,0 +1,98 @@
+{{ block content }}
+<link rel="stylesheet" type="text/css" href="{{ static 'global/forms.css' }}">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-latest.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-rating-input/0.4.0/bootstrap-rating-input.js" integrity="sha512-iPM8dV0Jp7FajUlVYnbOtP8ofzjxndWSjgPtd3HCyXfJnlaAbz9bi9RsCsESm4gwB5AGK79yy402TG/Jf40FGA==" crossorigin="anonymous"></script>
+    <div class="jumbotron p-3 mb-2 bg-light text-dark" style="text-align:center">
+
+
+
+<table class="table">
+    <col width="300px" />
+    <col width="200px" />
+
+  <thead>
+    <tr>
+        <th scope="col">Statement</th>
+        <th scope="col">Answer</th>
+    </tr>
+  </thead>
+  <tbody>
+
+<tr>
+      <th scope="row">{{ player.item_4A_label }}
+      </th>
+      <td class="text-align-center">
+            <label for="" class="pull-left">Not important</label>
+            <label for="" class="pull-right">Supreme importance</label>
+            <input type="range" name="item4A" value="None" step="1" style="width:100%;" min="1" max="7" class="form-control form-range">
+            <p id="feedback_item4A" style="font-size:14px;"><br></p>
+      </td>
+
+
+    </tr>
+
+
+  </tbody>
+</table>
+
+
+    <hr>
+    {% next_button  %}
+
+
+</div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+    
+        $(document).ready(function () {
+      $('input[type=range]').on('input change', function () {
+            $(this).addClass('myclass');
+            $('.otree-btn-next').prop('disabled', false);
+        });
+      $('input[type=range]').on('input', function() {
+          $(this).next().html('.');
+      });
+
+      $('input[type=range]').on("click",function() {
+                    $(this).parent().css("background-color","#f8f9fa");
+            }); 
+
+      $('.otree-form').on('submit',function(event){
+        event.preventDefault(); // Preventing from the form to be exectued
+        var check_ranges = true;
+        $("input[type=range]").next().each(function(index,element) { // Checking 
+          if($(element).html() == '<br>') {
+            check_ranges = false;
+            $(this).parent().css("background-color","#FFB6C1");
+          }
+        });
+
+        if(check_ranges) {
+          event.currentTarget.submit(); // If no error (everything filled), the form submit is allowed to proceed to the server
+        } else {
+          alert("Please answer all points."); // Showing an alert if not
+        }
+
+      });
+
+    });
+
+</script>
+<style type="text/css">
+    .otree-body {
+        max-width: 900px !important;
+    }
+
+    label {
+        font-weight: bold !important;
+    }
+
+    td p {
+        color: transparent;
+    }
+</style>
+{{ endblock }}

@@ -1,0 +1,87 @@
+{{ block content }}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Introduction</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+</head>
+<h1>Part 1</h1>
+
+<h2>General Information</h2>
+
+<div class="jumbotron p-3 mb-2 bg-light text-dark" style="text-align:justify">
+    <p>
+        This experiment consists of <strong>10 rounds</strong>.
+    </p>
+
+    <p>
+        Each round will consist of three phases.
+    </p>
+
+    <div class="d-flex flex-row justify-content-around" style="width: 50%; margin: 20px auto;">
+        <div class="d-flex flex-column">
+            <div class="dot-title">Streaming</div>
+            <div class="dot-container">
+                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="#888888"
+                     class="bi bi-dot"
+                     viewBox="-3 0 16 16">
+                    <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
+                </svg>
+            </div>
+        </div>
+        <div class="d-flex flex-column">
+            <div class="dot-title">Tipping</div>
+            <div class="dot-container">
+                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="#888888" class="bi bi-dot"
+                     viewBox="-0.4 0 16 16">
+                    <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
+                </svg>
+            </div>
+        </div>
+        <div class="d-flex flex-column">
+            <div class="dot-title">Results</div>
+            <div class="dot-container">
+                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="#888888" class="bi bi-dot"
+                     viewBox="0 0 16 16">
+                    <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+
+    <p>
+        In this experiment, there will be <b>one Streamer</b> and all other participants will be
+        Viewers. All participants will remain in the same role throughout the entire experiment. You will be randomly
+        assigned to be a <i>Streamer</i> or <i>Viewer</i> at the start of Part 2.
+    </p>
+
+    <p>
+        During the experiment, please <b>do not remove your headphones</b> and make sure you carefully read any
+        information displayed on the screens.
+    </p>
+
+    <p>
+        At the end of this experiment, <b>5 rounds</b> will be drawn randomly and your payout will <b>equal the earnings
+        from those rounds</b> and an <b> additional 2.50 € </b> show-up fee.
+    </p>
+
+</div>
+
+<button class="otree-btn-next btn btn-primary" style="float: right;">Next</button>
+
+<style type="text/css">
+    body {
+        padding-bottom: 50px;
+    }
+
+    .otree-timer {
+        display: none !important;
+    }
+</style>
+
+{{ endblock }}
