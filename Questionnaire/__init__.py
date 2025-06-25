@@ -40,9 +40,6 @@ class Constants(BaseConstants):
     ]
 
 
-    completionlink = "1105E948"
-
-
 
     ####### ON the side font-weight: normal; header still bold.
 

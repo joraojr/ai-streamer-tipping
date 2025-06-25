@@ -25,7 +25,7 @@ class Constants(BaseConstants):
     players_per_group = 5
 
     #No leaderboard then False, otherwise True (has to be the same for introduction/init):
-    leaderboard = True
+    leaderboard = False
 
     #Leaderboard info (dont touch in general, only topn if there are too few players to display topn which has to be the same for introduction/init)
     leaderboard_topn = 10
@@ -83,7 +83,7 @@ class Slider(ExtraModel):
 
 def generate_puzzle(player: Player) -> Puzzle:
     """Create new puzzle for a player"""
-    params = player.session.params
+    params = player.session.config
     num = params['num_sliders']
     layout = task_sliders.generate_layout(params)
     puzzle = Puzzle.create(
@@ -173,7 +173,7 @@ def play_game(player: Player, message: dict):
     player_instance = player
     session = player_instance.session
     my_id = player_instance.id_in_group
-    params = session.params
+    params = session.config
 
     now = time.time()
 
@@ -249,23 +249,25 @@ class Subsession(BaseSubsession):
     num_groups_created = models.IntegerField(initial=0)
 
 def creating_session(subsession: Subsession):
+
+    # TODO Check if this code is really necessary. Should I have 2 creating session? Here and in the introduction
     if subsession.round_number != 1:
     	subsession.group_like_round(1)
     else:
         for player in subsession.get_players():
             participant = player.participant
             participant.account_balance = 0
-    session = subsession.session
-    defaults = dict(
-        trial_delay=1.0,
-        retry_delay=0.1,
-        num_sliders=48,
-        num_columns=3,
-        attempts_per_slider=100
-    )
-    session.params = {}
-    for param in defaults:
-        session.params[param] = session.config.get(param, defaults[param])
+    # session = subsession.session
+    # defaults = dict(
+    #     trial_delay=1.0,
+    #     retry_delay=0.1,
+    #     num_sliders=48,
+    #     num_columns=3,
+    #     attempts_per_slider=100
+    # )
+    # session.config = {}
+    # for param in defaults:
+    #     session.config[param] = session.config.get(param, defaults[param])
 
 
 class GroupWait(WaitPage):
@@ -291,7 +293,7 @@ class GroupWait(WaitPage):
         for p in group.get_players():
             if i==0:
                 p1 = p
-                params = p.session.params
+                params = p.session.config
                 num = params['num_sliders']
                 layout = task_sliders.generate_layout(params)
                 puzzle = Puzzle.create(
@@ -308,7 +310,7 @@ class GroupWait(WaitPage):
                         value=initial
                     )
             else:
-                params = p.session.params
+                params = p.session.config
                 num = params['num_sliders']
                 sliders = Slider.filter(puzzle=puzzle)
                 current_puzzle = Puzzle.create(
@@ -358,14 +360,14 @@ class Slider_task(Page):
     @staticmethod
     def js_vars(player: Player):
         return dict(
-            params=player.session.params,
+            params=player.session.config,
             slider_size=task_sliders.SLIDER_BBOX,
         )
 
     @staticmethod
     def vars_for_template(player: Player):
         return dict(
-            params=player.session.params,
+            params=player.session.config,
             DEBUG=settings.DEBUG,
         )
 

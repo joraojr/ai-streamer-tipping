@@ -15,24 +15,20 @@ This is a test run for the public goods experiment.
 """
 
 
-
-
 ######## Models #############
 
 class Constants(BaseConstants):
     name_in_url = 'intro'
     num_rounds = 1
-    completionlink = "1105E948"
     players_per_group = None
 
-    #No leaderboard then False, otherwise True (has to be the same for streaming/init):
-    leaderboard = True
-    
-    #Leaderboard info (dont touch in general, only topn if there are too few players to display topn, which has to be the same for streaming/init)
-    leaderboard_topn = 10
-    leaderboard_list_T = [False,True]
-    leaderboard_list_F = [False]
+    # No leaderboard then False, otherwise True (has to be the same for streaming/init):
+    leaderboard = False
 
+    # Leaderboard info (dont touch in general, only topn if there are too few players to display topn, which has to be the same for streaming/init)
+    leaderboard_topn = 10
+    leaderboard_list_T = [False, True]
+    leaderboard_list_F = [False]
 
 
 class Player(BasePlayer):
@@ -54,20 +50,8 @@ class Subsession(BaseSubsession):
 
 
 def creating_session(subsession: Subsession):
-    session = subsession.session
-    defaults = dict(
-        trial_delay=1.0,
-        retry_delay=0.1,
-        num_sliders=18,
-        num_columns=1,
-        attempts_per_slider=100
-    )
-    session.params = {}
-    for param in defaults:
-        session.params[param] = session.config.get(param, defaults[param])
-        
     import itertools
-    
+
     if Constants.leaderboard is True:
         leaderboard_iter = itertools.cycle(Constants.leaderboard_list_T)
     else:
@@ -107,7 +91,7 @@ class Slider(ExtraModel):
 
 def generate_puzzle(player: Player) -> Puzzle:
     """Create new puzzle for a player"""
-    params = player.session.params
+    params = player.session.config
     num = params['num_sliders']
     layout = task_sliders.generate_layout(params)
     puzzle = Puzzle.create(
@@ -162,9 +146,18 @@ def get_progress(player: Player):
     )
 
 
-def handle_response(puzzle, slider, value):
+def handle_response(puzzle, slider, value, bot_assist):
     slider.value = task_sliders.snap_value(value, slider.target)
-    slider.is_correct = slider.value == slider.target
+    print(f"Abs: {abs(slider.value - slider.target)}")
+    # if bot_assitant treatment:
+    if bot_assist:
+        if abs(slider.value - slider.target) <= 30:
+            slider.is_correct = True
+            slider.value = slider.target
+        else:
+            slider.is_correct = False
+    else:
+        slider.is_correct = slider.value == slider.target
     puzzle.num_correct = len(Slider.filter(puzzle=puzzle, is_correct=True))
     puzzle.is_solved = puzzle.num_correct == puzzle.num_sliders
 
@@ -196,14 +189,14 @@ def play_game(player: Player, message: dict):
     """
     session = player.session
     my_id = player.id_in_group
-    params = session.params
+    params = session.config
 
     now = time.time()
     # the current puzzle or none
     puzzle = get_current_puzzle(player)
 
     message_type = message['type']
-
+    print(f"message: {message}")
     if message_type == 'load':
         p = get_progress(player)
         if puzzle:
@@ -229,16 +222,22 @@ def play_game(player: Player, message: dict):
 
         slider = get_slider(puzzle, int(message["slider"]))
 
+        print(params['retry_delay'])
+        print(f"Slider: {slider}")
+
         if slider is None:
             raise RuntimeError("missing slider")
         if slider.attempts >= params['attempts_per_slider']:
             raise RuntimeError("too many slider motions")
 
         value = int(message["value"])
-        handle_response(puzzle, slider, value)
+
+        # Here is the place that we can add some random to the slider value
+        handle_response(puzzle, slider, value, params['bot_assist'])
         puzzle.response_timestamp = now
         slider.attempts += 1
         player.num_correct = puzzle.num_correct
+        print(f"Slider after try: {slider}")
 
         p = get_progress(player)
         return {
@@ -267,6 +266,7 @@ class Introduction(Page):
 class Explanation1(Page):
     pass
 
+
 class Demo(Page):
     timeout_seconds = 45
     live_method = play_game
@@ -274,14 +274,14 @@ class Demo(Page):
     @staticmethod
     def js_vars(player: Player):
         return dict(
-            params=player.session.params,
+            params=player.session.config,
             slider_size=task_sliders.SLIDER_BBOX,
         )
 
     @staticmethod
     def vars_for_template(player: Player):
         return dict(
-            params=player.session.params,
+            params=player.session.config,
             DEBUG=settings.DEBUG
         )
 
@@ -293,6 +293,7 @@ class Demo(Page):
             player.elapsed_time = puzzle.response_timestamp - puzzle.timestamp
             player.num_correct = puzzle.num_correct
             player.payoff = player.num_correct
+
 
 class Explanation1a(Page):
     pass
@@ -327,3 +328,5 @@ page_sequence = [part0, part1, Introduction, Explanation1,
                  Explanation1a, Explanation2, Explanation3,
                  Comprehension, Demo
                  ]
+
+# page_sequence = [Demo]

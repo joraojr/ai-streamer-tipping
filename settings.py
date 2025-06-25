@@ -1,12 +1,17 @@
 from os import environ
 
-
 SESSION_CONFIGS = [
     dict(
         name='digital_tipping',
-        app_sequence=['introduction','streaming','Questionnaire'], # 'introduction', 'questionnaire', 'payout_info'
-        num_demo_participants=5
-        )
+        app_sequence=['introduction', 'streaming', 'Questionnaire'],  # 'introduction', 'questionnaire', 'payout_info'
+        num_demo_participants=5,
+        trial_delay=1.0,
+        retry_delay=0.1,
+        num_sliders=48,
+        num_columns=3,
+        attempts_per_slider=100,
+        bot_assist=True,
+    )
 
 ]
 
@@ -18,7 +23,8 @@ SESSION_CONFIGS = [
 SESSION_CONFIG_DEFAULTS = dict(
     real_world_currency_per_point=1.00,
     participation_fee=0.00,
-    doc=""
+    doc="",
+    treatment='control', #Add it to intro
 )
 
 # ISO-639 code
@@ -28,7 +34,6 @@ LANGUAGE_CODE = 'en'
 # e.g. EUR, GBP, CNY, JPY
 REAL_WORLD_CURRENCY_CODE = 'EUR'
 USE_POINTS = False
-
 
 ROOMS = [
     dict(
@@ -47,18 +52,16 @@ DEMO_PAGE_INTRO_HTML = """
 Here are some oTree games.
 """
 
-PARTICIPANT_FIELDS = ['account_balance','treatment','role','group_id','leaderboard','within_group_id','earnings_list','drawn_rounds','drawn_earnings']
+PARTICIPANT_FIELDS = ['account_balance', 'treatment', 'role', 'group_id', 'leaderboard', 'within_group_id',
+                      'earnings_list', 'drawn_rounds', 'drawn_earnings']
 
 SECRET_KEY = '2570135731236'
 
 INSTALLED_APPS = ['otree']
-SESSION_FIELDS = ['params']
-
 
 # adjustments for testing
 # generating session configs for all varieties of features
 import sys
-
 
 if sys.argv[1] == 'test':
     MAX_ITERATIONS = 5
@@ -74,6 +77,7 @@ if sys.argv[1] == 'test':
             trial_delay=TRIAL_PAUSE,
             retry_delay=FREEZE_TIME,
             num_sliders=50,
+            bot_assist=False,
             attempts_per_slider=3,
         ),
     ]
