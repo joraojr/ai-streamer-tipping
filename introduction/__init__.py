@@ -1,7 +1,4 @@
-import csv
 from otree.api import *
-import itertools
-import random
 import time
 import json
 from otree import settings
@@ -30,6 +27,16 @@ class Constants(BaseConstants):
     leaderboard_list_T = [False, True]
     leaderboard_list_F = [False]
 
+    PoDIRS_6_SCALES = [
+        [1, "I strongly disagree"],
+        [2, "I disagree"],
+        [3, "I rather disagree"],
+        [4, "It is indifferent to me"],
+        [5, "I rather agree"],
+        [6, "I agree"],
+        [7, "I strongly agree"],
+    ]
+
 
 class Player(BasePlayer):
     prolific_id = models.StringField()
@@ -38,6 +45,53 @@ class Player(BasePlayer):
     iteration = models.IntegerField(initial=0)
     num_correct = models.IntegerField(initial=0)
     elapsed_time = models.FloatField(initial=0)
+
+    """
+        LEGEND:
+        RT = Risk Taking
+        T = TRUST
+        A - Altruism
+        NR = Negative reciprocity
+        PR = Positive reciprocity
+
+    """
+
+    Pr1 = models.StringField(
+        choices=Constants.PoDIRS_6_SCALES,
+        label="If someone does me a favor, I am prepared to return it.",
+        widget=widgets.RadioSelectHorizontal(),
+        blank=False
+    )
+    Pr2 = models.StringField(
+        choices=Constants.PoDIRS_6_SCALES,
+        label="I go out of my way to help somebody who has been kind to me in the past.",
+        widget=widgets.RadioSelectHorizontal(),
+        blank=False
+    )
+    Pr3 = models.StringField(
+        choices=Constants.PoDIRS_6_SCALES,
+        label="I am ready to assume personal costs to help somebody who helped me in the past.",
+        widget=widgets.RadioSelectHorizontal(),
+        blank=False
+    )
+    Nr1 = models.StringField(
+        choices=Constants.PoDIRS_6_SCALES,
+        label="If I suffer a serious wrong, I will take revenge as soon as possible, no matter what the cost.",
+        widget=widgets.RadioSelectHorizontal(),
+        blank=False
+    )
+    Nr2 = models.StringField(
+        choices=Constants.PoDIRS_6_SCALES,
+        label="If somebody puts me in a difficult position, I will do the same to him/her.",
+        widget=widgets.RadioSelectHorizontal(),
+        blank=False
+    )
+    Nr3 = models.StringField(
+        choices=Constants.PoDIRS_6_SCALES,
+        label="If somebody offends me, I will offend him/her back.",
+        widget=widgets.RadioSelectHorizontal(),
+        blank=False
+    )
 
 
 class Group(BaseGroup):
@@ -50,6 +104,9 @@ class Subsession(BaseSubsession):
 
 
 def creating_session(subsession: Subsession):
+    if subsession.session.config['treatment'] == "HUMAN_PAYS_HUMAN":
+        subsession.session.bot_assist = True
+
     import itertools
 
     if Constants.leaderboard is True:
@@ -151,7 +208,7 @@ def handle_response(puzzle, slider, value, bot_assist):
     print(f"Abs: {abs(slider.value - slider.target)}")
     # if bot_assitant treatment:
     if bot_assist:
-        if abs(slider.value - slider.target) <= 30:
+        if abs(slider.value - slider.target) <= 15: # 5%
             slider.is_correct = True
             slider.value = slider.target
         else:
@@ -264,11 +321,17 @@ class Introduction(Page):
 
 
 class Explanation1(Page):
-    pass
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(
+            treatment=player.session.config['treatment'],
+            streamer_deduction=c(1.25)
+        )
 
 
 class Demo(Page):
-    timeout_seconds = 45
+    timeout_seconds = 45000
     live_method = play_game
 
     @staticmethod
@@ -315,18 +378,28 @@ class Comprehension(Page):
         player.comprehension_activity = player.field_maybe_none("comprehension_activity") + "," + str(to_export)
 
 
-class part0(Page):
+class Part0(Page):
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(
+            show_up_fee=player.session.config['participation_fee'],
+        )
+
+
+class Part1(Page):
     pass
 
 
-class part1(Page):
-    pass
+class PreSurvey(Page):
+    form_model = 'player'
+    form_fields = ['Pr1', 'Pr2', 'Pr3', 'Nr1', 'Nr2', 'Nr3']
 
 
 ## Setting the sequence of the pages shown to the user below
-page_sequence = [part0, part1, Introduction, Explanation1,
-                 Explanation1a, Explanation2, Explanation3,
-                 Comprehension, Demo
-                 ]
+page_sequence = [
+    Part0, Part1, PreSurvey,
+    Introduction, Explanation1, Explanation1a, Explanation2, Explanation3, Comprehension,
+    Demo
+]
 
 # page_sequence = [Demo]

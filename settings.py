@@ -2,7 +2,7 @@ from os import environ
 
 SESSION_CONFIGS = [
     dict(
-        name='digital_tipping',
+        name='AI_streamer',
         app_sequence=['introduction', 'streaming', 'Questionnaire'],  # 'introduction', 'questionnaire', 'payout_info'
         num_demo_participants=5,
         trial_delay=1.0,
@@ -10,7 +10,7 @@ SESSION_CONFIGS = [
         num_sliders=48,
         num_columns=3,
         attempts_per_slider=100,
-        bot_assist=True,
+        bot_assist=False,
     )
 
 ]
@@ -22,9 +22,15 @@ SESSION_CONFIGS = [
 
 SESSION_CONFIG_DEFAULTS = dict(
     real_world_currency_per_point=1.00,
-    participation_fee=0.00,
+    participation_fee=4.50,
     doc="",
-    treatment='control', #Add it to intro
+    treatment='HUMAN_NO_PAY_HUMAN',
+    # [HUMAN_NO_PAY_HUMAN],   # Human plays - Human no pay - Human earns (CONTROL)
+    # [HUMAN_PAYS_HUMAN],     # Human plays - Human pays   - Human earns
+    # [BOT_NO_PAY_HUMAN],     # Bot plays   - Human no pay - Human earns
+    # [BOT_PAYS_HUMAN],       # Bot plays   - Human pays   - Human earns
+    # [BOT_NO_PAY_BOT]        # Bot plays   - Human no pay - Bot earns
+    # [BOT_PAYS_BOT],         # Bot plays   - Human pays   - Bot earns
 )
 
 # ISO-639 code

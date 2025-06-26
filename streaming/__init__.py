@@ -20,7 +20,7 @@ This is a test run for the public goods experiment.
 ######## Models #############
 
 class Constants(BaseConstants):
-    name_in_url = 'part1'
+    name_in_url = 'Part1'
     num_rounds = 10
     players_per_group = 5
 
