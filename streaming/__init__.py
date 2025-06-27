@@ -24,22 +24,25 @@ class Constants(BaseConstants):
     num_rounds = 10
     players_per_group = 5
 
-    #No leaderboard then False, otherwise True (has to be the same for introduction/init):
+    # No leaderboard then False, otherwise True (has to be the same for introduction/init):
     leaderboard = False
 
-    #Leaderboard info (dont touch in general, only topn if there are too few players to display topn which has to be the same for introduction/init)
+    # Leaderboard info (dont touch in general, only topn if there are too few players to display topn which has to be the same for introduction/init)
     leaderboard_topn = 10
-    treatments_F = ['control','descriptive_quant','descriptive_non_quant','injunctive_active','injunctive_passive']    
+    treatments_F = ['control', 'descriptive_quant', 'descriptive_non_quant', 'injunctive_active', 'injunctive_passive']
     treatments_T = ['control']
 
-    roles = ['streamer','viewer','viewer','viewer','viewer','viewer','viewer','viewer','viewer','viewer','viewer',
-    'viewer','viewer','viewer','viewer','viewer','viewer','viewer','viewer','viewer','viewer',
-    'viewer','viewer','viewer','viewer','viewer','viewer','viewer','viewer','viewer','viewer','viewer','viewer','viewer','viewer']
-
+    roles = ['streamer', 'viewer', 'viewer', 'viewer', 'viewer', 'viewer', 'viewer', 'viewer', 'viewer', 'viewer',
+             'viewer',
+             'viewer', 'viewer', 'viewer', 'viewer', 'viewer', 'viewer', 'viewer', 'viewer', 'viewer', 'viewer',
+             'viewer', 'viewer', 'viewer', 'viewer', 'viewer', 'viewer', 'viewer', 'viewer', 'viewer', 'viewer',
+             'viewer', 'viewer', 'viewer', 'viewer']
 
 
 class Player(BasePlayer):
     # only suported 1 iteration for now
+    bot_assist = models.BooleanField(default=False)
+
     iteration = models.IntegerField(initial=0)
     minimum_number = models.IntegerField(initial=0)
 
@@ -53,7 +56,8 @@ class Player(BasePlayer):
 
 
 def tip_max(player):
-    return player.num_correct*10
+    return player.num_correct * 10
+
 
 class Puzzle(ExtraModel):
     """A model to keep record of sliders setup"""
@@ -138,9 +142,18 @@ def get_progress(player: Player):
     )
 
 
-def handle_response(puzzle, slider, value):
+def handle_response(puzzle, slider, value, bot_assist):
     slider.value = task_sliders.snap_value(value, slider.target)
-    slider.is_correct = slider.value == slider.target
+    print(f"Abs: {abs(slider.value - slider.target)}")
+    # if bot_assitant treatment:
+    if bot_assist:
+        if abs(slider.value - slider.target) <= 15:  # 5%
+            slider.is_correct = True
+            slider.value = slider.target
+        else:
+            slider.is_correct = False
+    else:
+        slider.is_correct = slider.value == slider.target
     puzzle.num_correct = len(Slider.filter(puzzle=puzzle, is_correct=True))
     puzzle.is_solved = puzzle.num_correct == puzzle.num_sliders
 
@@ -215,7 +228,7 @@ def play_game(player: Player, message: dict):
                 raise RuntimeError("too many slider motions")
 
             value = int(message["value"])
-            handle_response(puzzle, slider, value)
+            handle_response(puzzle, slider, value, player.bot_assist)
             puzzle.response_timestamp = now
             slider.attempts += 1
             p.num_correct = puzzle.num_correct
@@ -238,21 +251,25 @@ def play_game(player: Player, message: dict):
     raise RuntimeError("unrecognized message from client")
 
 
-
 class Group(BaseGroup):
     tips = models.FloatField(initial=0)
     leaderboard = models.BooleanField(initial=False)
     num_correct = models.IntegerField(initial=0)
 
+
 ########### PAGES  #############
 class Subsession(BaseSubsession):
     num_groups_created = models.IntegerField(initial=0)
 
+
 def creating_session(subsession: Subsession):
+    if subsession.session.config['treatment'] == "HUMAN_PAYS_HUMAN":
+        for player in subsession.get_players():
+            player.bot_assist = True
 
     # TODO Check if this code is really necessary. Should I have 2 creating session? Here and in the introduction
     if subsession.round_number != 1:
-    	subsession.group_like_round(1)
+        subsession.group_like_round(1)
     else:
         for player in subsession.get_players():
             participant = player.participant
@@ -271,7 +288,6 @@ def creating_session(subsession: Subsession):
 
 
 class GroupWait(WaitPage):
-
     group_by_arrival_time = True
 
     @staticmethod
@@ -291,7 +307,7 @@ class GroupWait(WaitPage):
         drawn_rounds.sort()
         i = 0
         for p in group.get_players():
-            if i==0:
+            if i == 0:
                 p1 = p
                 params = p.session.config
                 num = params['num_sliders']
@@ -332,19 +348,19 @@ class GroupWait(WaitPage):
 
             if p.round_number == 1:
                 p.participant.drawn_rounds = drawn_rounds
-                p.participant.earnings_list = [0,0,0,0,0,0,0,0,0,0]
+                p.participant.earnings_list = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                 if p.participant.leaderboard is False and Constants.leaderboard is True:
                     p.participant.role = "viewer"
                 else:
                     p.participant.role = next(role_iter)
-                
+
                 p.participant.treatment = next(treatment)
-                p.participant.within_group_id = i+1
+                p.participant.within_group_id = i + 1
                 p.participant.group_id = subsession.num_groups_created
             p.id_in_group = p.participant.within_group_id
             i += 1
 
-        #Whether leaderboard treatment is true for the session or not
+        # Whether leaderboard treatment is true for the session or not
         group.leaderboard = Constants.leaderboard
         subsession.num_groups_created += 1
 
@@ -380,20 +396,21 @@ class Slider_task(Page):
             if player.participant.role == "streamer":
                 player.group.num_correct = puzzle.num_correct
             if player.participant.role == "viewer":
-                player.slider_earn = round(player.group.num_correct*0.03,2)
+                player.slider_earn = round(player.group.num_correct * 0.03, 2)
             else:
-                player.slider_earn = round(player.group.num_correct*0.01,2)
-            #player.participant.account_balance = puzzle.num_correct*12
+                player.slider_earn = round(player.group.num_correct * 0.01, 2)
+            # player.participant.account_balance = puzzle.num_correct*12
             player.payoff = 0
+
 
 class part1(Page):
     pass
+
 
 class Tipping(Page):
     @staticmethod
     def is_displayed(player):
         return player.participant.role == 'viewer'
-
 
     @staticmethod
     def vars_for_template(player: Player):
@@ -413,9 +430,9 @@ class Tipping(Page):
             treatment_text = "It's good to leave a tip."
 
         return dict(
-            maxtip=round(player.group.num_correct*0.03,2),
+            maxtip=round(player.group.num_correct * 0.03, 2),
             treatment_text=treatment_text
-            )
+        )
 
     form_model = "player"
     form_fields = ['tip']
@@ -423,12 +440,13 @@ class Tipping(Page):
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
         if player.participant.role == "viewer":
-            player.slider_earn = round(player.group.num_correct*0.03,2)
+            player.slider_earn = round(player.group.num_correct * 0.03, 2)
         else:
-            player.slider_earn = round(player.group.num_correct*0.01,2)
-        player.group.tips = round(player.group.tips + player.tip,2)
+            player.slider_earn = round(player.group.num_correct * 0.01, 2)
+        player.group.tips = round(player.group.tips + player.tip, 2)
         if player.participant.role == "viewer":
-            player.round_earn = round(player.slider_earn-player.tip,2)
+            player.round_earn = round(player.slider_earn - player.tip, 2)
+
 
 class Results(Page):
 
@@ -438,7 +456,7 @@ class Results(Page):
         streamer_round_earn = 0
 
         if player.participant.role == "streamer":
-            streamer_round_earn = round(player.slider_earn+player.group.tips,2)
+            streamer_round_earn = round(player.slider_earn + player.group.tips, 2)
 
         if player.group.leaderboard:
             players = player.group.get_players()
@@ -447,28 +465,31 @@ class Results(Page):
             for index, player in enumerate(top_players, start=1):
                 player.rank = index
 
-            return dict(players=top_players,streamer_round_earn=streamer_round_earn)
+            return dict(players=top_players, streamer_round_earn=streamer_round_earn)
 
         if player.participant.role == "streamer":
             return dict(streamer_round_earn=streamer_round_earn)
 
-
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
         if player.participant.role == "streamer":
-            player.round_earn = round(player.slider_earn+player.group.tips,2)
+            player.round_earn = round(player.slider_earn + player.group.tips, 2)
         earnings_list = player.participant.earnings_list
-        earnings_list[player.round_number-1] = player.round_earn
+        earnings_list[player.round_number - 1] = player.round_earn
         player.participant.earnings_list = earnings_list
+
 
 class StreamerWait(WaitPage):
     pass
-    
+
+
 class ExtraWait(WaitPage):
     pass
 
+
 class Lobby(Page):
     timeout_seconds = 10
+
 
 class RandomDraw(Page):
     @staticmethod
@@ -481,7 +502,8 @@ class RandomDraw(Page):
         earnings_list = player.participant.earnings_list
         player.drawn_earnings = str([earnings_list[i] for i in drawn_indices])
         player.participant.drawn_earnings = [earnings_list[i] for i in drawn_indices]
-        player.participant.account_balance = round(sum(player.participant.drawn_earnings),2)
+        player.participant.account_balance = round(sum(player.participant.drawn_earnings), 2)
+
 
 class RandomDrawResult(Page):
     @staticmethod
@@ -490,8 +512,8 @@ class RandomDrawResult(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
-        return dict(total_payoff=round(player.participant.account_balance+2.50,2))
+        return dict(total_payoff=round(player.participant.account_balance + 2.50, 2))
 
 
 ## Setting the sequence of the pages shown to the user below
-page_sequence = [GroupWait,Lobby,Slider_task,ExtraWait,Tipping,StreamerWait,Results,RandomDraw,RandomDrawResult]
+page_sequence = [GroupWait, Lobby, Slider_task, ExtraWait, Tipping, StreamerWait, Results, RandomDraw, RandomDrawResult]

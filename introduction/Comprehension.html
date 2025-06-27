@@ -49,17 +49,20 @@
     <div id="answer_box">
         <div data-answer-option="0" class="answer_option">
             <input type="radio" name="radio_group" value="0">
-            <label for="option0">All participants receive 0.03 EUR for every solved slider.</label>
+            <label for="option0">All participants receive {{viewers_receive_per_slider}} for every solved
+                slider.</label>
         </div>
         <div data-answer-option="1" class="answer_option">
             <input type="radio" name="radio_group" value="1">
-            <label for="option1">The Streamer receives 0.01 EUR. The Viewers receive 0.03 EUR each for every
+            <label for="option1">The Streamer receives {{streamers_receive_per_slider}}. The Viewers receive
+                {{viewers_receive_per_slider}} each for every
                 solved
                 slider.</label>
         </div>
         <div data-answer-option="2" class="answer_option">
             <input type="radio" name="radio_group" value="2">
-            <label for="option2">Only Viewers receive 0.03 EUR each for every solved slider.</label>
+            <label for="option2">Only Viewers receive {{viewers_receive_per_slider}} each for every solved
+                slider.</label>
         </div>
     </div>
 
@@ -135,17 +138,26 @@
     $(document).ready(function () {
 
         var questions = ["How much earnings do participants for each correctly solved slider?",
-            "Viewers can leave 0 EUR as a tip.",
+            "Viewers can leave {{0|cu}} as a tip.",
             "Viewers can tip using earnings from previous rounds.",
             "How many Streamers are there in this experiment?",
             "How is the payout for this experiment determined?"
         ];
 
+        if ("{{ treatment }}" === "HUMAN_PAYS_HUMAN")
+            questions.push("The bot assist makes it easier for the Streamer to solve the sliders.");
+
+        if (["BOT_NO_PAY_HUMAN", "BOT_PAYS_HUMAN", "BOT_NO_PAY_BOT", "BOT_PAYS_BOT"].includes("{{ treatment }}"))
+            questions.push("The Streamer cannot drag the sliders.");
+
+        if (["BOT_NO_PAY_BOT", "BOT_PAYS_BOT"].includes("{{ treatment }}"))
+            questions.push("The Streamer receives round earnings and tips from Viewers.");
+
         var answers_data = {
             "first": {
-                "answers": ["All participants receive 0.03 EUR for every solved slider.",
-                    "The Streamer receives 0.01 EUR. The Viewers each receive 0.03 EUR for every solved slider.",
-                    "Only Viewers each receive 0.03 EUR for every solved slider."],
+                "answers": ["All participants receive {{viewers_receive_per_slider}} for every solved slider.",
+                    "The Streamer receives {{streamers_receive_per_slider}} EUR. The Viewers each receive {{viewers_receive_per_slider}} for every solved slider.",
+                    "Only Viewers each receive {{viewers_receive_per_slider}} for every solved slider."],
                 "correct": 1,
                 "prompts": ["This answer is incorrect. Please correct your answer.", "Your answer is correct.", "This answer is incorrect. Please correct your answer."],
                 "showtable": false
@@ -153,7 +165,7 @@
             "second": {
                 "answers": ["True", "False"],
                 "correct": 0,
-                "prompts": ["Your answer is correct. Viewers can tip between 0 EUR and the round earnings from the Streaming Phase.", "This answer is incorrect. Please correct your answer."],
+                "prompts": ["Your answer is correct. Viewers can tip between {{0|cu}} and the round earnings from the Streaming Phase.", "This answer is incorrect. Please correct your answer."],
                 "showtable": false
             },
             "third": {
@@ -169,7 +181,7 @@
                 "showtable": false
             },
             "fifth": {
-                "answers": ["The total earnings from all 10 rounds.", "The total round earnings from 5 randomly drawn rounds and an additional 2.5€ show-up fee.",
+                "answers": ["The total earnings from all 10 rounds.", "The total round earnings from 5 randomly drawn rounds and an additional {{show_up_fee}} show-up fee.",
                     "The total earnings from the last 5 rounds."],
                 "correct": 1,
                 "prompts": ["This answer is incorrect. Please correct your answer.", "Your answer is correct.", "This answer is incorrect. Please correct your answer."],
@@ -177,11 +189,35 @@
             }
         };
 
+        if ("{{ treatment }}" === "HUMAN_PAYS_HUMAN")
+            answers_data["sixth"] = {
+                "answers": ["True", "False"],
+                "correct": 0,
+                "prompts": ["Your answer is correct. The Streamer has a bot assist that increases the range where the slider can be solved.", "This answer is incorrect. Please correct your answer."],
+                "showtable": false
+            };
+
+        if (["BOT_NO_PAY_HUMAN", "BOT_PAYS_HUMAN", "BOT_NO_PAY_BOT", "BOT_PAYS_BOT"].includes("{{ treatment }}"))
+            answers_data["sixth"] = {
+                "answers": ["True", "False"],
+                "correct": 0,
+                "prompts": ["Your answer is correct. The Streamer can only watch the bot drag the sliders.", "This answer is incorrect. Please correct your answer."],
+                "showtable": false
+            };
+
+        if (["BOT_NO_PAY_BOT", "BOT_PAYS_BOT"].includes("{{ treatment }}"))
+            answers_data["seventh"] = {
+                "answers": ["True", "False"],
+                "correct": 1,
+                "prompts": ["This answer is incorrect. Please correct your answer.", "Your answer is correct. The Streamer only receives round earnings and the bot receives all tips."],
+                "showtable": false
+            };
+
 
         var data_keys = Object.keys(answers_data);
 
         var i = 0;
-        var limit = 4;
+        var limit = data_keys.length - 1; // Last question is the limit
         var current_key;
         var current_data;
         var selected_option;

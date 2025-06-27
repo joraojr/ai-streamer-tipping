@@ -10,7 +10,6 @@ SESSION_CONFIGS = [
         num_sliders=48,
         num_columns=3,
         attempts_per_slider=100,
-        bot_assist=False,
     )
 
 ]
@@ -24,9 +23,12 @@ SESSION_CONFIG_DEFAULTS = dict(
     real_world_currency_per_point=1.00,
     participation_fee=4.50,
     doc="",
+    bot_assist=False,
+    streamers_receive_per_slider=0.01,
+    viewers_receive_per_slider=0.03,
     treatment='HUMAN_NO_PAY_HUMAN',
     # [HUMAN_NO_PAY_HUMAN],   # Human plays - Human no pay - Human earns (CONTROL)
-    # [HUMAN_PAYS_HUMAN],     # Human plays - Human pays   - Human earns
+    # [HUMAN_PAYS_HUMAN],     # Human plays - Human pays   - Human earns (Bot assist)
     # [BOT_NO_PAY_HUMAN],     # Bot plays   - Human no pay - Human earns
     # [BOT_PAYS_HUMAN],       # Bot plays   - Human pays   - Human earns
     # [BOT_NO_PAY_BOT]        # Bot plays   - Human no pay - Bot earns

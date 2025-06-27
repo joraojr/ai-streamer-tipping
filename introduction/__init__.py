@@ -40,6 +40,7 @@ class Constants(BaseConstants):
 
 class Player(BasePlayer):
     prolific_id = models.StringField()
+    bot_assist = models.BooleanField(default=False)
     comprehension_activity = models.StringField(initial="initialize")
     comprehension_activity1 = models.StringField(initial="initialize")
     iteration = models.IntegerField(initial=0)
@@ -106,6 +107,8 @@ class Subsession(BaseSubsession):
 def creating_session(subsession: Subsession):
     if subsession.session.config['treatment'] == "HUMAN_PAYS_HUMAN":
         subsession.session.bot_assist = True
+        for player in subsession.get_players():
+            player.bot_assist = True
 
     import itertools
 
@@ -208,7 +211,7 @@ def handle_response(puzzle, slider, value, bot_assist):
     print(f"Abs: {abs(slider.value - slider.target)}")
     # if bot_assitant treatment:
     if bot_assist:
-        if abs(slider.value - slider.target) <= 15: # 5%
+        if abs(slider.value - slider.target) <= 15:  # 5%
             slider.is_correct = True
             slider.value = slider.target
         else:
@@ -289,8 +292,9 @@ def play_game(player: Player, message: dict):
 
         value = int(message["value"])
 
+        print(f"BotAssistant: {player.bot_assist}")
         # Here is the place that we can add some random to the slider value
-        handle_response(puzzle, slider, value, params['bot_assist'])
+        handle_response(puzzle, slider, value, player.bot_assist)
         puzzle.response_timestamp = now
         slider.attempts += 1
         player.num_correct = puzzle.num_correct
@@ -331,7 +335,7 @@ class Explanation1(Page):
 
 
 class Demo(Page):
-    timeout_seconds = 45000
+    timeout_seconds = 45
     live_method = play_game
 
     @staticmethod
@@ -359,15 +363,33 @@ class Demo(Page):
 
 
 class Explanation1a(Page):
-    pass
+    @staticmethod
+    def vars_for_template(player: Player):
+        solved_sliders = 10
+        return dict(
+            solved_sliders=solved_sliders,
+            viewers_receive_per_slider=cu(player.session.config['viewers_receive_per_slider']),
+            streamers_receive_per_slider=cu(player.session.config['streamers_receive_per_slider']),
+            performance_streamers=cu(player.session.config['streamers_receive_per_slider']) * solved_sliders,
+            performance_viewers=cu(player.session.config['viewers_receive_per_slider']) * solved_sliders
+        )
 
 
 class Explanation2(Page):
-    pass
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(
+            treatment=player.session.config['treatment'],
+        )
 
 
 class Explanation3(Page):
-    pass
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(
+            show_up_fee=player.session.config['participation_fee'],
+        )
 
 
 class Comprehension(Page):
@@ -376,6 +398,15 @@ class Comprehension(Page):
         epoch_time = int(time.time())
         to_export = [data["which_option"], data["which_question"], epoch_time, player.participant.code]
         player.comprehension_activity = player.field_maybe_none("comprehension_activity") + "," + str(to_export)
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(
+            show_up_fee=player.session.config['participation_fee'],
+            viewers_receive_per_slider=cu(player.session.config['viewers_receive_per_slider']),
+            streamers_receive_per_slider=cu(player.session.config['streamers_receive_per_slider']),
+            treatment=player.session.config['treatment'],
+        )
 
 
 class Part0(Page):

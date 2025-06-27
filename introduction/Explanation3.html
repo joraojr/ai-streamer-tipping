@@ -59,16 +59,15 @@
             </div>
             <div class="card-body">
                 <p class="card-text">
-                {{ if player.participant.leaderboard }}
-                                The Streamer sees a leaderboard with the top {{ Constants.leaderboard_topn }} tippers for the round.<br>
+                    {{ if player.participant.leaderboard }}
+                    The Streamer sees a leaderboard with the top {{ Constants.leaderboard_topn }} tippers for the round.<br>
                     The Streamer also sees the score for the number of correctly solved sliders, the round earnings
                     based on their performance, the total amount of tips received and the total round earnings including
                     tips.
-                {{ else }}
-                    The Streamer sees the score for the number of correctly solved sliders, the round earnings
-                    based on their performance, the total amount of tips received and the total round earnings including
-                    tips.
-                {{ endif }}
+                    {{ else }}
+                    The Streamer sees the number of correctly solved sliders, the round earnings based on their
+                    performance, the total amount of tips received and their round earnings including tips.
+                    {{ endif }}
                 </p>
             </div>
         </div>
@@ -81,16 +80,15 @@
             </div>
             <div class="card-body">
                 <p class="card-text">
-                                {{ if player.participant.leaderboard }}
+                    {{ if player.participant.leaderboard }}
                     Viewers see a leaderboard with the top {{ Constants.leaderboard_topn }} tippers for the round.<br>
                     Viewers also see the score for the number of correctly solved sliders, the round earnings
                     based on the Streamer's performance, how much they tipped individually and the remaining
                     earnings after tip.
-                {{ else }}
-                    Viewers see the score for the number of correctly solved sliders, the round earnings
-                    based on the Streamer's performance, how much they tipped individually and the remaining
-                    earnings after tip.
-                {{ endif }}
+                    {{ else }}
+                    Viewers see the number of correctly solved sliders, their round earnings based on the Streamer’s
+                    performance, how much they tipped and their remaining earnings after tip.
+                    {{ endif }}
 
                 </p>
             </div>
@@ -101,9 +99,8 @@
 
     <p>
         After the Results Phase, a new round begins for a total of <b>10 rounds</b>. After the 10 rounds, <b>5
-        rounds</b>
-        are drawn randomly and your payout for this experiment will equal the <b>earnings from those rounds</b> and an
-        <b>additional 2.50 €</b> show-up fee.
+        rounds</b> are drawn randomly and your payout for this experiment will equal the <b>earnings from those
+        rounds</b> and an <b>additional {{show_up_fee}}</b> show-up fee.
     </p>
 </div>
 

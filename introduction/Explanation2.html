@@ -75,9 +75,15 @@
                 <p class="card-text">
                     Viewers will see the score for the number of correctly solved sliders and their individual round
                     earnings based on the Streamer's performance. Viewers can decide to tip the Streamer. This tip is a
-                    share of their round earnings between <b>0 EUR</b> and <b>the round earnings from the Streaming
-                    Phase</b>. If the Viewer decides to tip the Streamer, the tip will be deducted from the Viewer's
-                    round earnings added to the Streamer's round earnings.
+                    share of their round earnings between <b>{{0.00|cu }}</b> and <b>the round earnings from the
+                    Streaming Phase</b>.
+
+                    {% if treatment in ["BOT_NO_PAY_BOT", "BOT_PAYS_BOT"] %}
+                    Since the streamer is <i>using a bot</i>, <b>the bot</b> will receive all tips. The <b>Streamer</b> will
+                    receive nothing. If the Viewer decides to tip, the tip will be deducted from the Viewer's round
+                    earnings added to the bot’s earnings.
+                    {% endif %}
+
                     <br>
                     <br>
                     Viewers cannot tip with earnings from previous rounds.
