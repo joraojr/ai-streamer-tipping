@@ -208,7 +208,6 @@ def get_progress(player: Player):
 
 def handle_response(puzzle, slider, value, bot_assist):
     slider.value = task_sliders.snap_value(value, slider.target)
-    print(f"Abs: {abs(slider.value - slider.target)}")
     # if bot_assitant treatment:
     if bot_assist:
         if abs(slider.value - slider.target) <= 15:  # 5%
@@ -256,7 +255,6 @@ def play_game(player: Player, message: dict):
     puzzle = get_current_puzzle(player)
 
     message_type = message['type']
-    print(f"message: {message}")
     if message_type == 'load':
         p = get_progress(player)
         if puzzle:
@@ -282,8 +280,6 @@ def play_game(player: Player, message: dict):
 
         slider = get_slider(puzzle, int(message["slider"]))
 
-        print(params['retry_delay'])
-        print(f"Slider: {slider}")
 
         if slider is None:
             raise RuntimeError("missing slider")
@@ -292,13 +288,10 @@ def play_game(player: Player, message: dict):
 
         value = int(message["value"])
 
-        print(f"BotAssistant: {player.bot_assist}")
-        # Here is the place that we can add some random to the slider value
         handle_response(puzzle, slider, value, player.bot_assist)
         puzzle.response_timestamp = now
         slider.attempts += 1
         player.num_correct = puzzle.num_correct
-        print(f"Slider after try: {slider}")
 
         p = get_progress(player)
         return {

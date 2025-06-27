@@ -144,7 +144,6 @@ def get_progress(player: Player):
 
 def handle_response(puzzle, slider, value, bot_assist):
     slider.value = task_sliders.snap_value(value, slider.target)
-    print(f"Abs: {abs(slider.value - slider.target)}")
     # if bot_assitant treatment:
     if bot_assist:
         if abs(slider.value - slider.target) <= 15:  # 5%
@@ -490,6 +489,10 @@ class ExtraWait(WaitPage):
 class Lobby(Page):
     timeout_seconds = 10
 
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(treatment=player.session.config["treatment"])
+
 
 class RandomDraw(Page):
     @staticmethod
@@ -504,6 +507,12 @@ class RandomDraw(Page):
         player.participant.drawn_earnings = [earnings_list[i] for i in drawn_indices]
         player.participant.account_balance = round(sum(player.participant.drawn_earnings), 2)
 
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(
+            show_up_fee=player.session.config["participation_fee"],
+        )
+
 
 class RandomDrawResult(Page):
     @staticmethod
@@ -512,7 +521,10 @@ class RandomDrawResult(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
-        return dict(total_payoff=round(player.participant.account_balance + 2.50, 2))
+        return dict(
+            show_up_fee=player.session.config["participation_fee"],
+            total_payoff=round(player.participant.account_balance + player.session.config["participation_fee"], 2)
+        )
 
 
 ## Setting the sequence of the pages shown to the user below

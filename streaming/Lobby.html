@@ -59,21 +59,42 @@
 
 
 <div class="jumbotron p-3 mb-2 bg-light text-dark" style="text-align:center;" id="set_minimum">
-{{ if player.participant.role == 'streamer' }}
-<p>You are the <b>STREAMER</b>.</p>
-<p>Get ready to perform the slider task.</p>
-{{ else }}
-{{ if player.participant.leaderboard }}
-<p>You are <b>VIEWER #{{ player.participant.within_group_id }}.</b></p>
-{{ else }}
-<p>You are a <b>VIEWER</b>.</p>
-{{ endif }}
-<p>Get ready to watch the streamer perform the slider task. You are <b>not able</b> to solve the sliders.</p>
-{{ endif }}
-<p>The streaming phase will start automatically when the countdown ends.</p>
-<p>All future rounds <b>will count</b> towards your earnings.</p>
-<br><br>
-<span id="time-left"></span>
+    {{ if player.participant.role == 'streamer' }}
+    <p>You are the <b>STREAMER</b>.</p>
+    <p>Get ready to perform the slider task.</p>
+
+    {{ if treatment == 'HUMAN_PAYS_HUMAN' }}
+    <p>You will have a <b>bot assist</b>. </p>
+
+    {{ elif treatment in ['BOT_NO_PAY_HUMAN','BOT_PAYS_HUMAN','BOT_NO_PAY_BOT','BOT_PAYS_BOT' ] }}
+    <p>You will <b>not be able</b> to drag the sliders. </p>
+    {{ endif }}
+
+    {{ else }}
+    {{ if player.participant.leaderboard }}
+    <p>You are <b>VIEWER #{{ player.participant.within_group_id }}.</b></p>
+    {{ else }}
+    <p>You are a <b>VIEWER</b>.</p>
+    {{ endif }}
+
+    {{ if treatment == 'HUMAN_PAYS_HUMAN' }}
+    <p>Get ready to watch the streamer perform the slider task. The Streamer is using a <b>bot assist</b>. You are <b>not able</b> to solve the
+        sliders. </p>
+
+    {{ elif treatment in ['BOT_NO_PAY_HUMAN','BOT_PAYS_HUMAN','BOT_NO_PAY_BOT','BOT_PAYS_BOT' ] }}
+    <p>Get ready to watch the streamer perform the slider task. The Streamer is using a <b>bot</b>. The Streamer can only watch the bot drag the
+        sliders. You are <b>not able</b> to solve the sliders. </p>
+
+    {{ else }}
+    <p>Get ready to watch the streamer perform the slider task. You are <b>not able</b> to solve the sliders.</p>
+    {{ endif }}
+    {{ endif }}
+
+    <p>The streaming phase will start automatically when the countdown ends.</p>
+    <p>All future rounds <b>will count</b> towards your earnings.</p>
+
+    <br><br>
+    <span id="time-left"></span>
 </div>
 
 
@@ -86,19 +107,19 @@
 <script type="text/javascript">
 
 
-  // Timer
-  let customTimerEle = document.getElementById('time-left');
+    // Timer
+    let customTimerEle = document.getElementById('time-left');
 
-  document.addEventListener("DOMContentLoaded", function (event) {
-      $('.otree-timer__time-left').on('update.countdown', function (event) {
-          const totalSeconds = event.offset.totalSeconds;
-          const minutes = Math.floor(totalSeconds / 60);
-          const seconds = Math.floor(totalSeconds % 60);
+    document.addEventListener("DOMContentLoaded", function (event) {
+        $('.otree-timer__time-left').on('update.countdown', function (event) {
+            const totalSeconds = event.offset.totalSeconds;
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = Math.floor(totalSeconds % 60);
 
-          // Use template literals to format the time as "0:45"
-          customTimerEle.innerText = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-      });
-  });
+            // Use template literals to format the time as "0:45"
+            customTimerEle.innerText = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        });
+    });
 
 </script>
 <style media="screen">
