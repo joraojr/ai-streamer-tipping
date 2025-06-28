@@ -23,11 +23,16 @@ class Constants(BaseConstants):
     ]
 
     Tipping_behaviour = [
+        # [1, 'Never'],
+        # [2, 'Rarely'],
+        # [3, 'Occasionally'],
+        # [4, 'Frequently'],
+        # [5, 'Always']
         [1, 'Never'],
-        [2, 'Rarely'],
-        [3, 'Occasionally'],
-        [4, 'Frequently'],
-        [5, 'Always']
+        [2, '1-5 times'],
+        [3, 'At least once a month'],
+        [4, 'At least once a week'],
+        [5, 'At least once a day']
     ]
 
     Social_norms = [
@@ -134,30 +139,71 @@ class Player(BasePlayer):
     QA41 = models.IntegerField(label='I always do my best to follow society’s rules.', choices=Constants.Social_norms,
                                widget=widgets.RadioSelectHorizontal())
 
+    AI_Q1 = models.IntegerField(label='I tip the streamer in a round in order to get a good performance in the next round.', choices=Constants.Likert,
+                                widget=widgets.RadioSelectHorizontal())
+
+    AI_Q2 = models.IntegerField(label='I tip the streamer in order to gain social status/respect.', choices=Constants.Likert,
+                                widget=widgets.RadioSelectHorizontal())
+    AI_Q3 = models.IntegerField(label='I tip to help the streamer.', choices=Constants.Likert, widget=widgets.RadioSelectHorizontal())
+    AI_Q4 = models.IntegerField(label="I tip to make up for the streamer's low wages.", choices=Constants.Likert,
+                                widget=widgets.RadioSelectHorizontal())
+    AI_Q5 = models.IntegerField(label='I tip in order to repay the streamer for his/her efforts.', choices=Constants.Likert,
+                                widget=widgets.RadioSelectHorizontal())
+    AI_Q6 = models.IntegerField(label='I tip the streamer to reward good performance.', choices=Constants.Likert,
+                                widget=widgets.RadioSelectHorizontal())
+    AI_Q7 = models.IntegerField(label='I tip the streamer because it is expected.', choices=Constants.Likert, widget=widgets.RadioSelectHorizontal())
+    AI_Q8 = models.IntegerField(label='I tip the streamer out of a sense of duty.', choices=Constants.Likert, widget=widgets.RadioSelectHorizontal())
+    AI_Q9 = models.IntegerField(label='I tip because watching the live streaming is enjoyable.', choices=Constants.Likert,
+                                widget=widgets.RadioSelectHorizontal())
+    AI_Q10 = models.IntegerField(label='I tip because watching the live streaming makes me feel relaxed.', choices=Constants.Likert,
+                                 widget=widgets.RadioSelectHorizontal())
+    AI_Q11 = models.IntegerField(label='I tip because I feel pleasant when watching the live streaming.', choices=Constants.Likert,
+                                 widget=widgets.RadioSelectHorizontal())
+
     age = models.IntegerField(
-        label="What is your age?",
-        min=14,
-        max=100
+        label="How old are you?",
+        choices=[
+            [1, '18-24'],
+            [2, '25-34'],
+            [3, '35-44'],
+            [4, '45-54'],
+            [5, '55-64'],
+            [6, '65-74'],
+            [7, '75 or over'],
+        ],
+        widget=widgets.RadioSelectHorizontal()
+
     )
 
     gender = models.StringField(
-        label="What is your gender?",
-        choices=["Male", "Female", "Other", "Prefer not to say"]
+        label="With which gender do you identify yourself most?",
+        choices=["Male", "Female", "Prefer not to say", "Other"],
+        widget=widgets.RadioSelectHorizontal()
+
     )
 
-    subject = models.StringField(
-        label="Which subject are you primarily enrolled in?",
-        choices=["Economics/Business", "Law", "Humanities", "Science/Engineering", "None/Other"]
+    economics = models.StringField(
+        label="How would you rate your expertise in Economics on a scale of 1 (not knowledgeable at all) to 5 (expert)?",
+        choices=range(1, 6),
+        widget=widgets.RadioSelectHorizontal()
+
     )
+
+    # subject = models.StringField(
+    #     label="Which subject are you primarily enrolled in?",
+    #     choices=["Economics/Business", "Law", "Humanities", "Science/Engineering", "None/Other"]
+    # )
 
     religion = models.StringField(
         label="Do you consider yourself a religious person?",
-        choices=["Strongly Disagree", "Disagree", "Neither Agree nor Disagree", "Agree", "Strongly Agree"]
+        choices=["Strongly Disagree", "Disagree", "Neither Agree nor Disagree", "Agree", "Strongly Agree"],
+        widget=widgets.RadioSelectHorizontal()
     )
 
     volunteer = models.StringField(
         label="Do you actively engage as a volunteer for an NGO, non-profit, or something similar?",
-        choices=["Yes", "No"]
+        choices=["Yes", "No"],
+        widget=widgets.RadioSelectHorizontal()
     )
 
 
@@ -277,14 +323,32 @@ class S6(Page):
         'QA41']
 
 
-class Demo(Page):
+class Demographics(Page):
     form_model = 'player'
     form_fields = [
         'gender',
         'age',
-        'subject',
+        'economics',
         'religion',
         'volunteer']
+
+
+class AIStreamer(Page):
+    @staticmethod
+    def is_displayed(player):
+        return player.participant.role == "viewer"
+
+    form_model = 'player'
+    form_fields = [
+        'QA33',
+        'QA34',
+        'QA35',
+        'QA36',
+        'QA37',
+        'QA38',
+        'QA39',
+        'QA40',
+        'QA41']
 
 
 # The prime key is: 544877
@@ -303,5 +367,5 @@ class finalpage(Page):
 
 
 page_sequence = [
-    part3, S1, S1a, S1b, S2, S3, S4, S5, S6, Demo, finalpage
+    part3, AIStreamer, S2, Demographics, finalpage
 ]
