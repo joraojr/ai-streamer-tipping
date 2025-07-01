@@ -29,9 +29,9 @@ class Constants(BaseConstants):
 
     # Leaderboard info (dont touch in general, only topn if there are too few players to display topn which has to be the same for introduction/init)
     leaderboard_topn = 10
-    treatments_F = ['control', 'descriptive_quant', 'descriptive_non_quant', 'injunctive_active', 'injunctive_passive']
+    # treatments_F = ['control', 'descriptive_quant', 'descriptive_non_quant', 'injunctive_active', 'injunctive_passive']
     treatments_T = ['control']
-
+    treatments_F = ['control']
     roles = ['streamer', 'viewer', 'viewer', 'viewer', 'viewer', 'viewer', 'viewer', 'viewer', 'viewer', 'viewer',
              'viewer',
              'viewer', 'viewer', 'viewer', 'viewer', 'viewer', 'viewer', 'viewer', 'viewer', 'viewer', 'viewer',
@@ -130,7 +130,7 @@ def encode_puzzle(puzzle: Puzzle):
         image=encode_image(image),
         size=layout['size'],
         grid=layout['grid'],
-        sliders={s.idx: {'value': s.value, 'is_correct': s.is_correct} for s in sliders}
+        sliders={s.idx: {'value': s.value, 'is_correct': s.is_correct, "target": s.target} for s in sliders}
     )
 
 
@@ -521,9 +521,21 @@ class RandomDrawResult(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
+        # TODO double-check this logic
+
+        total_payoff = player.participant.account_balance
+
+        if player.session.config["treatment"] in {"BOT_PAYS_HUMAN", "BOT_PAYS_BOT", "HUMAN_PAYS_HUMAN"}:
+            total_payoff -= player.session.config["streamer_deduction"]
+
+        total_payoff = max(total_payoff, 0)
+        player.payoff = total_payoff
+
+        total_payoff = round(total_payoff + player.session.config["participation_fee"], 2)
+
         return dict(
             show_up_fee=player.session.config["participation_fee"],
-            total_payoff=round(player.participant.account_balance + player.session.config["participation_fee"], 2)
+            total_payoff=total_payoff
         )
 
 

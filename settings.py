@@ -26,7 +26,8 @@ SESSION_CONFIG_DEFAULTS = dict(
     bot_assist=False,
     streamers_receive_per_slider=0.01,
     viewers_receive_per_slider=0.03,
-    treatment='HUMAN_NO_PAY_HUMAN',
+    streamer_deduction=1.25,
+    treatment='BOT_PAYS_HUMAN',
     # [HUMAN_NO_PAY_HUMAN],   # Human plays - Human no pay - Human earns (CONTROL)
     # [HUMAN_PAYS_HUMAN],     # Human plays - Human pays   - Human earns (Bot assist)
     # [BOT_NO_PAY_HUMAN],     # Bot plays   - Human no pay - Human earns

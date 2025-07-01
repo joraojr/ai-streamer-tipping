@@ -323,7 +323,7 @@ class Explanation1(Page):
     def vars_for_template(player: Player):
         return dict(
             treatment=player.session.config['treatment'],
-            streamer_deduction=c(1.25)
+            streamer_deduction=cu(player.session.config['streamer_deduction'])
         )
 
 
