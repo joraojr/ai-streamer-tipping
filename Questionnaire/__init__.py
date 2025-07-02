@@ -340,15 +340,18 @@ class AIStreamer(Page):
 
     form_model = 'player'
     form_fields = [
-        'QA33',
-        'QA34',
-        'QA35',
-        'QA36',
-        'QA37',
-        'QA38',
-        'QA39',
-        'QA40',
-        'QA41']
+        'AI_Q1',
+        'AI_Q2',
+        'AI_Q3',
+        'AI_Q4',
+        'AI_Q5',
+        'AI_Q6',
+        'AI_Q7',
+        'AI_Q8',
+        'AI_Q9',
+        'AI_10',
+        'AI_11',
+    ]
 
 
 # The prime key is: 544877

@@ -51,33 +51,34 @@
 <h1 style="padding-top: 30px;">Round result</h1>
 
 {{ if player.participant.leaderboard }}
-<div class="jumbotron p-3 mb-2 bg-light text-dark d-flex justify-content-center" style="text-align:center; flex-direction: column; align-items: center;">
-  <h2>Tipping Leaderboard</h2>
+<div class="jumbotron p-3 mb-2 bg-light text-dark d-flex justify-content-center"
+     style="text-align:center; flex-direction: column; align-items: center;">
+    <h2>Tipping Leaderboard</h2>
     {{ if player.participant.role == "viewer" }}
-  <p>You are <b>Viewer #{{ player.participant.within_group_id }}</b></p>
-  {{ endif }}
-  <table style="max-width: 600px;">
-      <tr>
-          <th>Rank</th>
-          <th>Viewer #</th>
-          <th>Tip</th>
-      </tr>
-      {{ for player_item in players }}
-      {{ if player_item.id_in_group == player.id_in_group }}
-      <tr style="font-size: 18px; font-weight: bold;">
-          <td>{{ player_item.rank }}.</td>
-          <td>#{{ player_item.id_in_group }}</td>
-          <td>{{ player_item.tip }} €</td>
-      </tr>
-      {{ else }}
-      <tr>
-          <td>{{ player_item.rank }}.</td>
-          <td>#{{ player_item.id_in_group }}</td>
-          <td>{{ player_item.tip }} €</td>
-      </tr>
-      {{ endif }}
-      {{ endfor }}
-  </table>
+    <p>You are <b>Viewer #{{ player.participant.within_group_id }}</b></p>
+    {{ endif }}
+    <table style="max-width: 600px;">
+        <tr>
+            <th>Rank</th>
+            <th>Viewer #</th>
+            <th>Tip</th>
+        </tr>
+        {{ for player_item in players }}
+        {{ if player_item.id_in_group == player.id_in_group }}
+        <tr style="font-size: 18px; font-weight: bold;">
+            <td>{{ player_item.rank }}.</td>
+            <td>#{{ player_item.id_in_group }}</td>
+            <td>{{ player_item.tip|cu }}</td>
+        </tr>
+        {{ else }}
+        <tr>
+            <td>{{ player_item.rank }}.</td>
+            <td>#{{ player_item.id_in_group }}</td>
+            <td>{{ player_item.tip|cu }}</td>
+        </tr>
+        {{ endif }}
+        {{ endfor }}
+    </table>
 
 </div>
 {{ endif }}
@@ -97,26 +98,36 @@
         <div style="flex-basis: 80%;"> Your round earnings based on correctly placed sliders
         </div>
         <div style="flex-basis: 15%;" class="payoff_text">
-          {{ player.slider_earn }} €
+            {{ player.slider_earn|cu }}
         </div>
     </div>
 </div>
 
-
+{{ if treatment in ["BOT_PAYS_BOT", "BOT_NO_PAY_BOT"] }}
+<div class="card" style="margin-bottom: 50px;">
+    <div class="card-body d-flex flex-row justify-content-between">
+        <div style="flex-basis: 80%;">Total tips from viewers in this round to the bot</div>
+        <div style="flex-basis: 15%;" class="payoff_text">
+            {{ player.group.tips|cu }}
+        </div>
+    </div>
+</div>
+{{ else }}
 <div class="card" style="margin-bottom: 50px;">
     <div class="card-body d-flex flex-row justify-content-between">
         <div style="flex-basis: 80%;">Total tips from viewers in this round</div>
         <div style="flex-basis: 15%;" class="payoff_text">
-            {{ player.group.tips }} €
+            {{ player.group.tips|cu }}
         </div>
     </div>
 </div>
+{{ endif }}
 
 <div class="card" style="margin-bottom: 50px;">
     <div class="card-body d-flex flex-row justify-content-between">
         <div style="flex-basis: 80%;"><b>Total round earnings with tips</b></div>
         <div style="flex-basis: 15%;" class="payoff_text">
-          {{ streamer_round_earn }} €
+            {{ streamer_round_earn|cu }}
         </div>
     </div>
 </div>
@@ -136,26 +147,39 @@
         <div style="flex-basis: 80%;"> Your round earnings based on correctly placed sliders
         </div>
         <div style="flex-basis: 15%;" class="payoff_text">
-            {{ player.slider_earn }} €
+            {{ player.slider_earn|cu }}
         </div>
     </div>
 </div>
 
+{{ if treatment in ["BOT_PAYS_BOT", "BOT_NO_PAY_BOT"] }}
+<div class="card" style="margin-bottom: 50px;">
+    <div class="card-body d-flex flex-row justify-content-between">
+        <div style="flex-basis: 80%;"> Your tip amount to the bot
+        </div>
+        <div style="flex-basis: 15%;" class="payoff_text">
+            {{ player.tip|cu }}
+        </div>
+    </div>
+</div>
+{{ else }}
 <div class="card" style="margin-bottom: 50px;">
     <div class="card-body d-flex flex-row justify-content-between">
         <div style="flex-basis: 80%;"> Your tip amount
         </div>
         <div style="flex-basis: 15%;" class="payoff_text">
-            {{ player.tip }} €
+            {{ player.tip|cu }}
         </div>
     </div>
 </div>
+{{ endif }}
+
 
 <div class="card" style="margin-bottom: 50px;">
     <div class="card-body d-flex flex-row justify-content-between">
         <div style="flex-basis: 80%;"><b> Your round earnings after tip</b></div>
         <div style="flex-basis: 15%;" class="payoff_text">
-          {{ player.round_earn }} €
+            {{ player.round_earn|cu }}
         </div>
     </div>
 </div>
@@ -226,7 +250,7 @@
     }
 
     td, th {
-      padding: 10px;
+        padding: 10px;
     }
 </style>
 {{ endblock }}

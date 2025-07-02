@@ -19,8 +19,8 @@
 <p>
 
 You have completed experiment. This concludes the study.<br><br>
-Your earnings are {{ player.participant.account_balance }} € from the 5 randomly chosen rounds.<br>
-Together with the {{show_up_fee}} show-up fee, this is {{ total_with_showup }} €.<br><br>
+Your earnings are {{ player.participant.account_balance|cu }} from the 5 randomly chosen rounds.<br>
+Together with the {{show_up_fee}} show-up fee, this is {{ total_with_showup|cu }}.<br><br>
 <b>Please wait, you will be automatically redirected to enter your payment information. </b>
   </p>
 
@@ -31,7 +31,7 @@ Together with the {{show_up_fee}} show-up fee, this is {{ total_with_showup }} �
 $(document).ready(function() {
     var additional_info = $('#additional_info').val();
     window.setTimeout(function() {
-        window.location.href = 'https://soscisurvey.wu.ac.at/livestreaming/?ID=' + additional_info;
+        window.location.href = 'https://soscisurvey.wu.ac.at/tipstream/?ID=' + additional_info;
     }, 20000);});
 
 </script>

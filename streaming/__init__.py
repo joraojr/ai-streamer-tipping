@@ -430,7 +430,8 @@ class Tipping(Page):
 
         return dict(
             maxtip=round(player.group.num_correct * player.session.config["viewers_receive_per_slider"], 2),
-            treatment_text=treatment_text
+            treatment_text=treatment_text,
+            treatment=player.session.config["treatment"]
         )
 
     form_model = "player"
@@ -455,7 +456,10 @@ class Results(Page):
         streamer_round_earn = 0
 
         if player.participant.role == "streamer":
-            streamer_round_earn = round(player.slider_earn + player.group.tips, 2)
+            if player.session.config["treatment"] in ["BOT_PAYS_BOT", "BOT_NO_PAY_BOT"]:
+                streamer_round_earn = player.slider_earn
+            else:
+                streamer_round_earn = round(player.slider_earn + player.group.tips, 2)
 
         if player.group.leaderboard:
             players = player.group.get_players()
@@ -464,15 +468,20 @@ class Results(Page):
             for index, player in enumerate(top_players, start=1):
                 player.rank = index
 
-            return dict(players=top_players, streamer_round_earn=streamer_round_earn)
+            return dict(players=top_players, streamer_round_earn=streamer_round_earn, treatment=player.session.config["treatment"])
 
         if player.participant.role == "streamer":
-            return dict(streamer_round_earn=streamer_round_earn)
+            return dict(streamer_round_earn=streamer_round_earn, treatment=player.session.config["treatment"])
+
+        return dict(treatment=player.session.config["treatment"])
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
         if player.participant.role == "streamer":
-            player.round_earn = round(player.slider_earn + player.group.tips, 2)
+            if player.session.config["treatment"] in ["BOT_PAYS_BOT", "BOT_NO_PAY_BOT"]:
+                player.round_earn = player.slider_earn
+            else:
+                player.round_earn = round(player.slider_earn + player.group.tips, 2)
         earnings_list = player.participant.earnings_list
         earnings_list[player.round_number - 1] = player.round_earn
         player.participant.earnings_list = earnings_list
