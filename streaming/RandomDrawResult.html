@@ -18,6 +18,11 @@
 
 <p>The following rounds were drawn randomly: <ul>{{ for item in player.participant.drawn_rounds }} <li>Round {{ item }}</li> {{ endfor }}</ul></p>
 <p>Your earnings in these rounds were <ul>{{ for item in player.participant.drawn_earnings }} <li>{{ item }} €</li> {{ endfor }}</ul></p>
+
+{{ if treatment in ["BOT_PAYS_HUMAN", "BOT_PAYS_BOT", "HUMAN_PAYS_HUMAN"] and player.participant.role == "streamer" }}
+    <p> You have <b>{{streamer_deduction}}</b> deducted from you earnings for using the bot.</p>
+{{ endif }}
+
 <p>This means, your total payout for the experiment with the additional {{show_up_fee}} show-up fee will be:</p>
 <p style="font-weight: bold; font-size: 30px; text-align: center;"><b>{{ total_payoff }} €</b></p>
 

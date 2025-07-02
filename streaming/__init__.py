@@ -395,9 +395,9 @@ class Slider_task(Page):
             if player.participant.role == "streamer":
                 player.group.num_correct = puzzle.num_correct
             if player.participant.role == "viewer":
-                player.slider_earn = round(player.group.num_correct * 0.03, 2)
+                player.slider_earn = round(player.group.num_correct * player.session.config["viewers_receive_per_slider"], 2)
             else:
-                player.slider_earn = round(player.group.num_correct * 0.01, 2)
+                player.slider_earn = round(player.group.num_correct * player.session.config["streamers_receive_per_slider"], 2)
             # player.participant.account_balance = puzzle.num_correct*12
             player.payoff = 0
 
@@ -429,7 +429,7 @@ class Tipping(Page):
             treatment_text = "It's good to leave a tip."
 
         return dict(
-            maxtip=round(player.group.num_correct * 0.03, 2),
+            maxtip=round(player.group.num_correct * player.session.config["viewers_receive_per_slider"], 2),
             treatment_text=treatment_text
         )
 
@@ -439,9 +439,9 @@ class Tipping(Page):
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
         if player.participant.role == "viewer":
-            player.slider_earn = round(player.group.num_correct * 0.03, 2)
+            player.slider_earn = round(player.group.num_correct * player.session.config["viewers_receive_per_slider"], 2)
         else:
-            player.slider_earn = round(player.group.num_correct * 0.01, 2)
+            player.slider_earn = round(player.group.num_correct * player.session.config["streamers_receive_per_slider"], 2)
         player.group.tips = round(player.group.tips + player.tip, 2)
         if player.participant.role == "viewer":
             player.round_earn = round(player.slider_earn - player.tip, 2)
@@ -521,21 +521,19 @@ class RandomDrawResult(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
-        # TODO double-check this logic
-
         total_payoff = player.participant.account_balance
 
-        if player.session.config["treatment"] in {"BOT_PAYS_HUMAN", "BOT_PAYS_BOT", "HUMAN_PAYS_HUMAN"}:
+        if player.session.config["treatment"] in ["BOT_PAYS_HUMAN", "BOT_PAYS_BOT", "HUMAN_PAYS_HUMAN"] and player.participant.role == "streamer":
             total_payoff -= player.session.config["streamer_deduction"]
 
-        total_payoff = max(total_payoff, 0)
-        player.payoff = total_payoff
-
-        total_payoff = round(total_payoff + player.session.config["participation_fee"], 2)
+        player.participant.payoff = cu(total_payoff)
+        total_payoff = player.participant.payoff_plus_participation_fee()
 
         return dict(
             show_up_fee=player.session.config["participation_fee"],
-            total_payoff=total_payoff
+            total_payoff=total_payoff,
+            treatment=player.session.config["treatment"],
+            streamer_deduction=cu(player.session.config["streamer_deduction"]),
         )
 
 

@@ -375,7 +375,7 @@ window.onload = (event) => {
                 console.error("Unknown round number:", round_number);
                 break;
         }
-        setTimeout(() => ctrl.simulateAllSlides(max_slides, speed_factor), 1000);
+        setTimeout(() => ctrl.simulateAllSlides(max_slides, speed_factor), 1500);
     }
 };
 

@@ -24,9 +24,9 @@ SESSION_CONFIG_DEFAULTS = dict(
     participation_fee=4.50,
     doc="",
     bot_assist=False,
-    streamers_receive_per_slider=0.01,
-    viewers_receive_per_slider=0.03,
-    streamer_deduction=1.25,
+    streamers_receive_per_slider=0.02,
+    viewers_receive_per_slider=0.06,
+    streamer_deduction=1.30,
     treatment='BOT_PAYS_HUMAN',
     # [HUMAN_NO_PAY_HUMAN],   # Human plays - Human no pay - Human earns (CONTROL)
     # [HUMAN_PAYS_HUMAN],     # Human plays - Human pays   - Human earns (Bot assist)
@@ -35,7 +35,6 @@ SESSION_CONFIG_DEFAULTS = dict(
     # [BOT_NO_PAY_BOT]        # Bot plays   - Human no pay - Bot earns
     # [BOT_PAYS_BOT],         # Bot plays   - Human pays   - Bot earns
 )
-
 # ISO-639 code
 # for example: de, fr, ja, ko, zh-hans
 LANGUAGE_CODE = 'en'
