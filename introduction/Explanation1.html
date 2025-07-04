@@ -53,71 +53,8 @@
         <p>
             <!-- Human plays - Human no pay - Human earns (CONTROL)-->
             At the beginning of each round the Streamer performs a slider task, where they need to solve as many sliders
-            as possible within the time-limit. To solve a slider, the Streamer must use the mouse to drag the blue
-            circle to the middle of each slider <b>until it turns green</b>. The blue circle <b>MUST TURN GREEN</b> in
-            order for the slider to count. If the circle remains blue, the slider does not count.
+            as possible within the time-limit.
         </p>
-
-        <div class="d-flex flex-column justify-content-center align-items-center">
-            <img src="{{ static 'images/slider_task_video_new.gif'}}" alt=""
-                 style="border: 1px solid #ddd; display: block; max-width: 500px; height: auto;">
-            <p style="text-align: center;"><i>Slider task demo</i></p>
-        </div>
-
-
-        {% if treatment == "HUMAN_PAYS_HUMAN" %}
-        <!-- Human plays - Human pays - Human earns -->
-        <!--            # TODO check the 20% increase-->
-
-        <p>
-            The Streamer will have a bot to assist them. The bot assist will make the slider task easier to solve. The
-            Streamer will drag the sliders and the bot will turn the blue circle green once the blue circle is <b>within
-            a
-            5% range </b> of the middle of each slider.
-        </p>
-
-
-        <div class="d-flex flex-column justify-content-center align-items-center">
-            <img src="{{ static 'images/slider_task_bot_assist_video.gif'}}" alt=""
-                 style="border: 1px solid #ddd; display: block; max-width: 500px; height: auto;">
-            <p style="text-align: center;"><i>Slider task <b>with bot assist</b> demo</i></p>
-        </div>
-
-
-        {% elif treatment == "BOT_NO_PAY_HUMAN" %}
-        <!-- Bot plays - Human no pay - Human earns -->
-        <p>
-            The Streamer will have a bot to drag the sliders for them. The Streamer <b>cannot</b> drag the sliders and
-            can only watch the bot drag the sliders.
-        </p>
-
-        {% elif treatment == "BOT_PAYS_HUMAN" %}
-        <!-- Bot plays - Human pays - Human earns -->
-        <p>
-
-            The Streamer will have a bot to drag the sliders for them. The Streamer <b>cannot</b> drag the sliders and
-            can only watch the bot drag the sliders. The Streamer will have <b>{{streamer_deduction}} deducted </b> from
-            their final payout for using the bot.
-        </p>
-
-
-        {% elif treatment == "BOT_NO_PAY_BOT" %}
-        <!-- Bot plays - Human no pay - Bot earns -->
-        <p>
-            The Streamer will have a bot to drag the sliders for them. The Streamer <b>cannot</b> drag the sliders and
-            can only watch the bot drag the sliders.
-        </p>
-
-        {% elif treatment == "BOT_PAYS_BOT" %}
-        <!-- Bot plays - Human pays - Bot earns -->
-        <p>
-            The Streamer will have a bot to drag the sliders for them. The Streamer <b>cannot</b> drag the sliders and
-            can only watch the bot drag the sliders. The Streamer will have <b>{{streamer_deduction}} deducted</b> from
-            their final payout for using the bot.
-        </p>
-
-
-        {% endif %}
 
     </div>
 

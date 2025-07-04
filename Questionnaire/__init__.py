@@ -370,5 +370,5 @@ class finalpage(Page):
 
 
 page_sequence = [
-    part3, AIStreamer, S2, Demographics, finalpage
+    part3, AIStreamer, S1a, S2, Demographics, finalpage
 ]

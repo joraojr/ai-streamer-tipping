@@ -37,6 +37,14 @@ class Constants(BaseConstants):
         [7, "I strongly agree"],
     ]
 
+    Likert = [
+        [1, 'Strongly disagree'],
+        [2, 'Disagree'],
+        [3, 'Neither Agree nor Disagree'],
+        [4, 'Agree'],
+        [5, 'Strongly agree']
+    ]
+
 
 class Player(BasePlayer):
     prolific_id = models.StringField()
@@ -90,6 +98,58 @@ class Player(BasePlayer):
     Nr3 = models.StringField(
         choices=Constants.PoDIRS_6_SCALES,
         label="If somebody offends me, I will offend him/her back.",
+        widget=widgets.RadioSelectHorizontal(),
+        blank=False
+    )
+
+    BAII_1 = models.StringField(
+        choices=Constants.Likert,
+        label="Bots that can perform this kind of task better than humans make me uncomfortable",
+        widget=widgets.RadioSelectHorizontal(),
+        blank=False
+    )
+    BAII_2 = models.StringField(
+        choices=Constants.Likert,
+        label="Bots that can perform this kind of task go against what I believe computers should be used for",
+        widget=widgets.RadioSelectHorizontal(),
+        blank=False
+    )
+    BAII_3 = models.StringField(
+        choices=Constants.Likert,
+        label="Bots that can perform this kind of task are unsettling.",
+        widget=widgets.RadioSelectHorizontal(),
+        blank=False
+    )
+    BAII_4 = models.StringField(
+        choices=Constants.Likert,
+        label="I can see the benefits in bots that can perform this kind of task better than humans.",
+        widget=widgets.RadioSelectHorizontal(),
+        blank=False
+    )
+    BAII_5 = models.StringField(
+        choices=Constants.Likert,
+        label="I believe this kind of bot can perform well.",
+        widget=widgets.RadioSelectHorizontal(),
+        blank=False
+    )
+
+    BAI_1 = models.StringField(
+        choices=Constants.Likert,
+        label="How much confidence do you have in the bots performance?",
+        widget=widgets.RadioSelectHorizontal(),
+        blank=False
+    )
+
+    BAI_2 = models.IntegerField(
+        label="How much confidence do you have in your own performance? ",
+        choices=Constants.Likert,
+        widget=widgets.RadioSelectHorizontal(),
+        blank=False
+    )
+
+    BAI_3 = models.IntegerField(
+        label="How likely is the bot to make a really bad performance?",
+        choices=list(range(0, 9)),
         widget=widgets.RadioSelectHorizontal(),
         blank=False
     )
@@ -280,7 +340,6 @@ def play_game(player: Player, message: dict):
 
         slider = get_slider(puzzle, int(message["slider"]))
 
-
         if slider is None:
             raise RuntimeError("missing slider")
         if slider.attempts >= params['attempts_per_slider']:
@@ -327,6 +386,25 @@ class Explanation1(Page):
         )
 
 
+class Explanation1a(Page):
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(
+            treatment=player.session.config['treatment'],
+            streamer_deduction=cu(player.session.config['streamer_deduction'])
+        )
+
+
+class Explanation1b(Page):
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(
+            treatment=player.session.config['treatment'],
+            streamer_deduction=cu(player.session.config['streamer_deduction'])
+        )
+
+
 class Demo(Page):
     timeout_seconds = 45
     live_method = play_game
@@ -355,7 +433,7 @@ class Demo(Page):
             player.payoff = player.num_correct
 
 
-class Explanation1a(Page):
+class Explanation1c(Page):
     @staticmethod
     def vars_for_template(player: Player):
         solved_sliders = 10
@@ -419,10 +497,39 @@ class PreSurvey(Page):
     form_fields = ['Pr1', 'Pr2', 'Pr3', 'Nr1', 'Nr2', 'Nr3']
 
 
+class BotAversionII(Page):
+    form_model = 'player'
+    form_fields = [
+        'BAII_1',
+        'BAII_2',
+        'BAII_3',
+        'BAII_4',
+        'BAII_5',
+    ]
+
+
+class BotAversionI1(Page):
+    form_model = 'player'
+    form_fields = [
+        'BAI_1',
+        'BAI_2',
+    ]
+
+
+class BotAversionI2(Page):
+    form_model = 'player'
+    form_fields = [
+        'BAI_3',
+    ]
+
+
 ## Setting the sequence of the pages shown to the user below
 page_sequence = [
     Part0, Part1, PreSurvey,
-    Introduction, Explanation1, Explanation1a, Explanation2, Explanation3, Comprehension,
+    Introduction, Explanation1, Explanation1a, BotAversionII, Explanation1b, Explanation1c, BotAversionI1, BotAversionI2,
+    Explanation2,
+    Explanation3,
+    Comprehension,
     Demo
 ]
 
