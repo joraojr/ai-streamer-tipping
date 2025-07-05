@@ -57,6 +57,8 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
+    drawn_earnings = models.StringField(initial=0)
+
     QA1 = models.IntegerField(label='Receiving round earnings from streaming made me feel happy', choices=Constants.Likert,
                               widget=widgets.RadioSelectHorizontal())
     QA2 = models.IntegerField(label='I had unpleasant feelings about receiving round earnings', choices=Constants.Likert,
@@ -349,8 +351,8 @@ class AIStreamer(Page):
         'AI_Q7',
         'AI_Q8',
         'AI_Q9',
-        'AI_10',
-        'AI_11',
+        'AI_Q10',
+        'AI_Q11',
     ]
 
 
@@ -359,7 +361,7 @@ class AIStreamer(Page):
 class finalpage(Page):
     @staticmethod
     def vars_for_template(player: Player):
-        total_with_showup = round(player.participant.account_balance + player.session.config["participation_fee"], 3)
+        total_with_showup = player.participant.payoff_plus_participation_fee()
 
         masked_payment = (total_with_showup * 544877)
         return dict(
@@ -369,6 +371,49 @@ class finalpage(Page):
         )
 
 
+class RandomDraw(Page):
+    @staticmethod
+    def is_displayed(player):
+        return player.round_number == Constants.num_rounds
+
+    @staticmethod
+    def before_next_page(player, timeout_happened):
+        drawn_indices = [x - 1 for x in player.participant.drawn_rounds]
+        earnings_list = player.participant.earnings_list
+        player.drawn_earnings = str([earnings_list[i] for i in drawn_indices])
+        player.participant.drawn_earnings = [earnings_list[i] for i in drawn_indices]
+        player.participant.account_balance = round(sum(player.participant.drawn_earnings), 2)
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(
+            show_up_fee=player.session.config["participation_fee"],
+        )
+
+
+class RandomDrawResult(Page):
+    @staticmethod
+    def is_displayed(player):
+        return player.round_number == Constants.num_rounds
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        total_payoff = player.participant.account_balance
+
+        if player.session.config["treatment"] in ["BOT_PAYS_HUMAN", "BOT_PAYS_BOT", "HUMAN_PAYS_HUMAN"] and player.participant.role == "streamer":
+            total_payoff -= player.session.config["streamer_deduction"]
+
+        player.participant.payoff = cu(total_payoff)
+        total_payoff = player.participant.payoff_plus_participation_fee()
+
+        return dict(
+            show_up_fee=player.session.config["participation_fee"],
+            total_payoff=total_payoff,
+            treatment=player.session.config["treatment"],
+            streamer_deduction=cu(player.session.config["streamer_deduction"]),
+        )
+
+
 page_sequence = [
-    part3, AIStreamer, S1a, S2, Demographics, finalpage
+    part3, AIStreamer, S1a, S2, Demographics, RandomDraw, RandomDrawResult, finalpage
 ]

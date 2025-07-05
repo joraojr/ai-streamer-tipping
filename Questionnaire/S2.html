@@ -1,36 +1,35 @@
 {{ block content }}
 <link rel="stylesheet" type="text/css" href="{{ static 'global/forms.css' }}">
 
-    <div class="jumbotron p-3 mb-2 bg-light text-dark" style="text-align:center">
+<div class="jumbotron p-3 mb-2 bg-light text-dark" style="text-align:center">
     <b>
     </b>
 
 
-<table class="table">
-    <thead>
-      <tr>
-        <th>Question</th>
-        <th>Never</th>
-        <th>1-5 times</th>
-        <th>At least once a month</th>
-        <th>At least once a week</th>
-        <th>At least once a day</th>
-    </tr>
-    </thead>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Question</th>
+            <th>Never</th>
+            <th>1-5 times</th>
+            <th>At least once a month</th>
+            <th>At least once a week</th>
+            <th>At least once a day</th>
+        </tr>
+        </thead>
 
-    <tbody>
-    {{ for field in form }}
+        <tbody>
+        {{ for field in form }}
         <tr>
             <th>{{ field.label }}</th>
             {{ for choice in field }}
-                <td>{{ choice }}</td>
+            <td>{{ choice }}</td>
             {{ endfor }}
         </tr>
-    {{ endfor }}
-    </tbody>
-</table>
+        {{ endfor }}
+        </tbody>
+    </table>
 
-    <hr>
     <button class="otree-btn-next btn btn-primary" style="float: right;">Next</button>
 
 

@@ -510,6 +510,10 @@ class BotAversionII(Page):
 
 
 class BotAversionI1(Page):
+    @staticmethod
+    def is_displayed(player):
+        return player.session.config['treatment'] in ["BOT_PAYS_HUMAN", "BOT_NO_PAY_HUMAN", "BOT_PAYS_BOT", "BOT_NO_PAY_BOT"]
+
     form_model = 'player'
     form_fields = [
         'BAI_1',
@@ -518,6 +522,10 @@ class BotAversionI1(Page):
 
 
 class BotAversionI2(Page):
+    @staticmethod
+    def is_displayed(player):
+        return player.session.config['treatment'] in ["BOT_PAYS_HUMAN", "BOT_NO_PAY_HUMAN", "BOT_PAYS_BOT", "BOT_NO_PAY_BOT"]
+
     form_model = 'player'
     form_fields = [
         'BAI_3',

@@ -52,7 +52,6 @@ class Player(BasePlayer):
     slider_earn = models.FloatField(initial=0)
     round_earn = models.FloatField(initial=0)
     rank = models.IntegerField(initial=0)
-    drawn_earnings = models.StringField(initial=0)
 
 
 def tip_max(player):
@@ -503,48 +502,6 @@ class Lobby(Page):
         return dict(treatment=player.session.config["treatment"])
 
 
-class RandomDraw(Page):
-    @staticmethod
-    def is_displayed(player):
-        return player.round_number == Constants.num_rounds
-
-    @staticmethod
-    def before_next_page(player, timeout_happened):
-        drawn_indices = [x - 1 for x in player.participant.drawn_rounds]
-        earnings_list = player.participant.earnings_list
-        player.drawn_earnings = str([earnings_list[i] for i in drawn_indices])
-        player.participant.drawn_earnings = [earnings_list[i] for i in drawn_indices]
-        player.participant.account_balance = round(sum(player.participant.drawn_earnings), 2)
-
-    @staticmethod
-    def vars_for_template(player: Player):
-        return dict(
-            show_up_fee=player.session.config["participation_fee"],
-        )
-
-
-class RandomDrawResult(Page):
-    @staticmethod
-    def is_displayed(player):
-        return player.round_number == Constants.num_rounds
-
-    @staticmethod
-    def vars_for_template(player: Player):
-        total_payoff = player.participant.account_balance
-
-        if player.session.config["treatment"] in ["BOT_PAYS_HUMAN", "BOT_PAYS_BOT", "HUMAN_PAYS_HUMAN"] and player.participant.role == "streamer":
-            total_payoff -= player.session.config["streamer_deduction"]
-
-        player.participant.payoff = cu(total_payoff)
-        total_payoff = player.participant.payoff_plus_participation_fee()
-
-        return dict(
-            show_up_fee=player.session.config["participation_fee"],
-            total_payoff=total_payoff,
-            treatment=player.session.config["treatment"],
-            streamer_deduction=cu(player.session.config["streamer_deduction"]),
-        )
-
 
 ## Setting the sequence of the pages shown to the user below
-page_sequence = [GroupWait, Lobby, Slider_task, ExtraWait, Tipping, StreamerWait, Results, RandomDraw, RandomDrawResult]
+page_sequence = [GroupWait, Lobby, Slider_task, ExtraWait, Tipping, StreamerWait, Results]

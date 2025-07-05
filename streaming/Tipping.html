@@ -60,7 +60,7 @@
 <div class="jumbotron p-3 mb-2 bg-light text-dark" style="text-align:justify;">
 
     <p>The Streamer scored a total of <b> {{ player.group.num_correct }} </b> sliders in this round.</p>
-    <p>This translates to round earnings of <b> {{ maxtip|cu }}</b>.</p>
+    <p>You round earnings are <b> {{ maxtip|cu }}</b>.</p>
     {{ if treatment in ["BOT_PAYS_BOT", "BOT_NO_PAY_BOT"] }}
     <p>You can tip <b>the bot</b> up to <b> {{ maxtip|cu }}</b>.</p>
     {{ else }}
