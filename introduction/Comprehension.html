@@ -11,12 +11,12 @@
 </head>
 
 <h2>Comprehension Questions</h2>
-<div class="jumbotron p-3 mb-2 bg-light text-dark text-left">
-    <p>
-        After this section, you have 45 seconds on the next page to try the slider task. The demo round
-        will not count towards your earnings.
-    </p>
-</div>
+<!--<div class="jumbotron p-3 mb-2 bg-light text-dark text-left">-->
+<!--    <p>-->
+<!--        After this section, you have 45 seconds on the next page to try the slider task. The demo round-->
+<!--        will not count towards your earnings.-->
+<!--    </p>-->
+<!--</div>-->
 <br><br>
 <div class="jumbotron p-3 mb-2 bg-light text-dark" style="text-align:left">
     <div id="table_box">
@@ -74,7 +74,7 @@
 
 </div>
 
-<button class="otree-btn-next btn btn-primary" style="display: none; float:right;">Start Demo</button>
+<button class="otree-btn-next btn btn-primary" style="display: none; float:right;">Start Demo Round</button>
 
 
 <style type="text/css">
@@ -145,7 +145,7 @@
         ];
 
         if ("{{ treatment }}" === "HUMAN_PAYS_HUMAN")
-            questions.push("The bot assist makes it easier for the Streamer to solve the sliders.");
+            questions.push("The bot assist will make the slider task easier to solve.");
 
         if (["BOT_NO_PAY_HUMAN", "BOT_PAYS_HUMAN", "BOT_NO_PAY_BOT", "BOT_PAYS_BOT"].includes("{{ treatment }}"))
             questions.push("The Streamer cannot drag the sliders.");

@@ -420,7 +420,8 @@ class Demo(Page):
     def vars_for_template(player: Player):
         return dict(
             params=player.session.config,
-            DEBUG=settings.DEBUG
+            DEBUG=settings.DEBUG,
+            treatment=player.session.config['treatment'],
         )
 
     @staticmethod
