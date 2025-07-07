@@ -361,13 +361,16 @@ class AIStreamer(Page):
 class finalpage(Page):
     @staticmethod
     def vars_for_template(player: Player):
+        # TODO change it from CU to real number
         total_with_showup = player.participant.payoff_plus_participation_fee()
 
-        masked_payment = (total_with_showup * 544877)
+        masked_payment = float(total_with_showup * 544877)
         return dict(
             total_with_showup=total_with_showup,
             masked_payment=masked_payment,
             show_up_fee=player.session.config["participation_fee"],
+            streamer_deduction=cu(player.session.config["streamer_deduction"]),
+            treatment=player.session.config["treatment"]
         )
 
 

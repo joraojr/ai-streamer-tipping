@@ -104,13 +104,13 @@ class Player(BasePlayer):
 
     BAII_1 = models.StringField(
         choices=Constants.Likert,
-        label="Bots that can perform this kind of task better than humans make me uncomfortable",
+        label="Bots that can perform this kind of task better than humans make me uncomfortable.",
         widget=widgets.RadioSelectHorizontal(),
         blank=False
     )
     BAII_2 = models.StringField(
         choices=Constants.Likert,
-        label="Bots that can perform this kind of task go against what I believe computers should be used for",
+        label="Bots that can perform this kind of task go against what I believe computers should be used for.",
         widget=widgets.RadioSelectHorizontal(),
         blank=False
     )
@@ -165,11 +165,6 @@ class Subsession(BaseSubsession):
 
 
 def creating_session(subsession: Subsession):
-    if subsession.session.config['treatment'] == "HUMAN_PAYS_HUMAN":
-        subsession.session.bot_assist = True
-        for player in subsession.get_players():
-            player.bot_assist = True
-
     import itertools
 
     if Constants.leaderboard is True:

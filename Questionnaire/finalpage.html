@@ -20,7 +20,12 @@
 
 You have completed experiment. This concludes the study.<br><br>
 Your earnings are {{ player.participant.account_balance|cu }} from the 5 randomly chosen rounds.<br>
-Together with the {{show_up_fee}} show-up fee, this is {{ total_with_showup|cu }}.<br><br>
+
+{{ if treatment in ["BOT_PAYS_HUMAN", "BOT_PAYS_BOT", "HUMAN_PAYS_HUMAN"] and player.participant.role == "streamer" }}
+    You have {{streamer_deduction}} deducted from you earnings for using the bot.<br>
+{% endif %}
+
+    <br>Together with the {{show_up_fee}} show-up fee, your final payout is <b>{{ total_with_showup|cu }}</b>.<br><br>
 <b>Please wait, you will be automatically redirected to enter your payment information. </b>
   </p>
 
