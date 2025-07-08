@@ -135,13 +135,13 @@ class Player(BasePlayer):
 
     BAI_1 = models.StringField(
         choices=Constants.Likert,
-        label="How much confidence do you have in the bots performance?",
+        label="How much confidence do you have in the bot's performance at the slider task?",
         widget=widgets.RadioSelectHorizontal(),
         blank=False
     )
 
     BAI_2 = models.IntegerField(
-        label="How much confidence do you have in your own performance? ",
+        label="How much confidence do you have in your own performance at the slider task?",
         choices=Constants.Likert,
         widget=widgets.RadioSelectHorizontal(),
         blank=False
@@ -456,6 +456,7 @@ class Explanation3(Page):
     def vars_for_template(player: Player):
         return dict(
             show_up_fee=player.session.config['participation_fee'],
+            treatment=player.session.config['treatment']
         )
 
 

@@ -65,9 +65,15 @@
                     based on their performance, the total amount of tips received and the total round earnings including
                     tips.
                     {{ else }}
+                    {% if treatment in ["BOT_NO_PAY_BOT", "BOT_PAYS_BOT"] %}
+                    The Streamer sees the number of correctly solved sliders, the round earnings based on their performance, the total amount of tips
+                    received by the bot and their round earnings.
+                    {% else %}
                     The Streamer sees the number of correctly solved sliders, the round earnings based on their
                     performance, the total amount of tips received and their round earnings including tips.
                     {{ endif }}
+                    {{ endif }}
+
                 </p>
             </div>
         </div>
